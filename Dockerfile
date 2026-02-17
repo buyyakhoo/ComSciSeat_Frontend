@@ -1,0 +1,24 @@
+FROM node:22-alpine
+
+# set working directory
+WORKDIR /app
+
+# Copy package files first to leverage Docker cache mechanisms
+COPY package.json .
+COPY package-lock.json .
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY . .
+
+# Build the SvelteKit app
+RUN npm run build
+
+# Expose the port the app runs on
+EXPOSE 4173
+
+# Define the command to run the app
+# CMD ["npm", "run", "preview"]
+CMD ["node", "build"]
