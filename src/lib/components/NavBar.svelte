@@ -26,7 +26,7 @@
 </script>
 
 <!-- Navbar -->
-<div class="navbar bg-accent-qss text-primary-content shadow-lg sticky top-0 z-50">
+<div class="navbar bg-primary-qss text-primary-content shadow-lg sticky top-0 z-50">
     <div class="navbar-start">
         <!-- Hamburger Menu: Phone/Tablet -->
         <div class="dropdown lg:hidden">
@@ -35,7 +35,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
                 </svg>
             </div>
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
+            <ul class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="/" class="text-base-content"><Home class="w-4 h-4" />Homepage</a></li>
                 <li><a href="/reservation" class="text-base-content"><Calendar class="w-4 h-4" />My Reservation</a></li>
             </ul>

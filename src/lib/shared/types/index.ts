@@ -12,6 +12,18 @@ export interface Session {
     expires?: string;
 }
 
+export interface LabRoom {
+    lab_id: number;
+    lab_name: string;
+}
+
+export interface TableReservation {
+    table_id: number;
+    table_code: string;
+    is_booked: boolean;
+}
+    
+
 export type TableStatusType = 'available' | 'reserved';
 
 // Stats Types

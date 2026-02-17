@@ -10,25 +10,46 @@
     import Legend from '$lib/components/Legend.svelte';
     import UserCard from '$lib/components/UserCard.svelte';
 
-    import type { Session } from '$lib/shared/types';
+    import type { Session, LabRoom } from '$lib/shared/types';
 
     import { browser } from '$app/environment';
+  import RoomButton from '$lib/components/RoomButton.svelte';
 
     export let data: { 
         session?: Session;
     };
-    
-    // Modal states
-    let showReservationModal = false;
-    let showDetailModal = false;
-    let showStudentIdModal = false;
-    
-    // Form data
-    // let reservationData = {
-    //     userName: '',
-    //     partySize: 2,
-    //     studentIds: [] as string[]
-    // };
+
+    let labRooms: LabRoom[] = [];
+
+    const fetchLabsRoom = async () => {
+        try {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL
+            const response = await fetch(`${BACKEND_URL}/api/labs`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (!data.success || !Array.isArray(data.data)) {
+                console.error('Unexpected response format:', data);
+                return;
+            }
+
+            labRooms = data.data
+
+            console.log('Fetched labs room data:', labRooms);
+        
+        } catch (error) {
+            console.error('Error fetching labs room data:', error);
+        }
+    }
 
     // ตรวจสอบ session จาก data ที่ส่งมาจาก server
     $: session = data.session;
@@ -38,31 +59,12 @@
         if (!session) {
             goto('/auth');
         }
-
-        // await fetchTables();
-        // console.log("------- BEFORE FETCHING TABLE STATUSES -------");
-        // await fetchTableStatuses();
-        // console.log("------- AFTER FETCHING TABLE STATUSES -------");
-
+        fetchLabsRoom();
     });
 
     $: if (!session && browser) {
         window.location.href = '/auth';
     }
-
-    // reactive statement
-    // $: if (session?.user?.name) {
-    //     reservationData.userName = session.user.name;
-    // }
-
-    $: stats = (() => {
-        let available = 0, reserved = 0
-        // tableStatuses.forEach((table: TableStatus) => {
-        //     if (table.status === 'available') available++;
-        //     else if (table.status === 'reserved') reserved++;
-        // });
-        return { available, reserved};
-    })();
 </script>
 
 <svelte:head>
@@ -90,29 +92,13 @@
         <!-- User Info Card -->
         <UserCard {session} />
         
-        <!-- Stats -->
-        <!-- <Stats {stats} {tables} /> -->
-        
-        <!-- Legend -->
-        <Legend />
-        
         <!-- Tables -->
         <div class="mb-8">
             <h3 class="text-xl font-bold mb-4">ห้องแลปคอม</h3>
-            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-10 gap-3">
-                <!-- {#each group.tables as table}
-                    {@const status = getTableStatus(table.id, selectedTimeSlot, tableStatuses)}
-                    {@const tableWithStatus = { ...table, status: status.status }}
-                    <TableButton 
-                        table={tableWithStatus}
-                        {selectedTimeSlot}
-                        {tableStatuses}
-                        {getTableStatus}
-                        {getStatusColor}
-                        {getStatusText} 
-                        on:click={({ detail }) => handleTableClick(detail)}
-                    />
-                {/each} -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {#each labRooms as labRoom}
+                    <RoomButton {labRoom} />
+                {/each}
             </div>
         </div>
 
