@@ -17,19 +17,29 @@ export interface LabRoom {
     lab_name: string;
 }
 
+export interface LabData {
+    roomId: number;
+    tables: TableReservation[];
+    status: string;
+    statusDescribe: string;
+    selectedDate: string;
+    selectedTime: string;
+}
+
 export interface TableReservation {
     table_id: number;
     table_code: string;
-    is_booked: boolean;
+    is_available: boolean;
 }
-    
 
-export type TableStatusType = 'available' | 'reserved';
-
-// Stats Types
-export interface TableStats {
-    available: number;
-    reserved: number;
+export interface ReservedTable {
+    booking_id: number;
+    table_id: number;
+    table_code: string;
+    lab_id: number;
+    lab_name: string;
+    date: string;
+    slot: string;
 }
 
 // Auth Types

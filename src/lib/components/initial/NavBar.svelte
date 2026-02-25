@@ -2,14 +2,11 @@
     import { Home, Calendar, Moon, Sun, User, LogOut } from "lucide-svelte";
     import { SignOut } from "@auth/sveltekit/components";
     import { onMount } from "svelte";
-
     import type { UserStu as UserData } from '$lib/shared/types';
 
-    export let session: { 
-        user?: UserData
-    } | null = null;
-
-    let currentTheme = 'light';
+    let { session } = $props<{ session?: { user?: UserData } | null }>();
+    session = session || null;
+    let currentTheme: string = $state('light');
     
     onMount(() => {
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -26,7 +23,7 @@
 </script>
 
 <!-- Navbar -->
-<div class="navbar bg-primary-qss text-primary-content shadow-lg sticky top-0 z-50">
+<div class="navbar bg-primary text-primary-content shadow-lg sticky top-0 z-50">
     <div class="navbar-start">
         <!-- Hamburger Menu: Phone/Tablet -->
         <div class="dropdown lg:hidden">
@@ -53,7 +50,7 @@
     </div>
     
     <div class="navbar-end gap-2">
-        <button class="btn btn-ghost btn-circle" on:click={toggleTheme}>
+        <button class="btn btn-ghost btn-circle" onclick={toggleTheme}>
             {#if currentTheme === 'light'}<Moon class="w-5 h-5" />{:else}<Sun class="w-5 h-5" />{/if}
         </button>
         
@@ -64,19 +61,17 @@
                         <img alt="Profile" src={session.user?.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"} />
                     </div>
                 </div>
-                <ul class="mt-3 z-50 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                <ul class="mt-3 z-50 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 gap-2">
                     <li class="menu-title">
                         <span class="text-base-content">{session.user?.name || 'ผู้ใช้'}</span>
                         <span class="text-xs opacity-60">{session.user?.role || 'นักศึกษา'}</span>
                     </li>
                     <li><a href="/profile" class="text-base-content"><User class="w-4 h-4" />Profile</a></li>
-                    <li><hr class="my-1"></li>
                     <li>
-                        <button on:click={toggleTheme} class="text-base-content">
+                        <button onclick={toggleTheme} class="text-base-content">
                             {#if currentTheme === 'light'}<Moon class="w-4 h-4" />Dark Mode{:else}<Sun class="w-4 h-4" />Light Mode{/if}
                         </button>
                     </li>
-                    <li><hr class="my-1"></li>
                     <li>
                         <SignOut redirectTo="/auth">
                             <div slot="submitButton" class="text-error w-full text-left">

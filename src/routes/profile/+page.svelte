@@ -3,20 +3,19 @@
     import { Bell, User as UserIcon } from 'lucide-svelte';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { browser } from '$app/environment';
-    import NavBar from '$lib/components/NavBar.svelte';
+    import NavBar from '$lib/components/initial/NavBar.svelte';
     
     import type { Session } from '$lib/shared/types';
 
-    export let data: { 
+    let data = $props<{ 
         session?: Session;
         profileData?: any;
         error?: string | null;
-    };
+    }>();
 
-    $: session = data.session;
-    $: profileData = data.profileData;
-    $: error = data.error || '';
+    let session = $derived(data.session);
+    let profileData = $derived(data.profileData);
+    let error = $derived(data.error || '');
 
     let isLoading = false;
 
@@ -24,16 +23,20 @@
     onMount(() => {
         if (!session) {
             goto('/auth');
+        } else {
+            isLoading = true;
         }
     });
 
-    $: if (!session && browser) {
-        window.location.href = '/auth';
-    }
+    // $effect(() => {
+    //     if (!session && browser) {
+    //         window.location.href = '/auth';
+    //     }
+    // });
 </script>
 
 <svelte:head>
-    <title>โปรไฟล์ - QuickSciSeat</title>
+    <title>โปรไฟล์ - ComSciSeat</title>
 </svelte:head>
 
 <!-- Session Check -->
@@ -103,7 +106,7 @@
                         
                         <!-- Name Field -->
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label" for="nameInput">
                                 <span class="label-text font-semibold">Name</span>
                             </label>
                             <div class="input input-bordered flex items-center bg-base-200">
@@ -113,7 +116,7 @@
 
                         <!-- ID Field -->
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label" for="idInput">
                                 <span class="label-text font-semibold">ID</span>
                             </label>
                             <div class="input input-bordered flex items-center bg-base-200">
@@ -123,7 +126,7 @@
 
                         <!-- Email Field -->
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label" for="emailInput">
                                 <span class="label-text font-semibold">E-Mail</span>
                             </label>
                             <div class="input input-bordered flex items-center bg-base-200">
@@ -133,7 +136,7 @@
 
                         <!-- Role Badge -->
                         <div class="form-control w-full">
-                            <label class="label">
+                            <label class="label" for="roleInput">
                                 <span class="label-text font-semibold">Role</span>
                             </label>
                             <div class="flex items-center">

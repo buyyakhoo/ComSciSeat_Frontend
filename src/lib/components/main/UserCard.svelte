@@ -27,19 +27,19 @@
                     </h2>
                     
                     <div class="flex flex-wrap justify-center lg:justify-start gap-2 mt-3 lg:mt-2">
-                        <div class="badge bg-primary-qss text-white py-3 px-3 sm:py-2 sm:px-2">
+                        <div class="badge bg-primary text-primary-content py-3 px-3 sm:py-2 sm:px-2">
                             <Mail class="w-3 h-3 mr-1" />
                             <span class="truncate max-w-[200px] sm:max-w-none">{session.user?.email}</span>
                         </div>
                         
                         {#if session.user?.student_id}
-                        <div class="badge bg-primary-qss text-white py-3 px-3 sm:py-2 sm:px-2">
+                        <div class="badge bg-primary text-primary-content py-3 px-3 sm:py-2 sm:px-2">
                             <GraduationCap class="w-3 h-3 mr-1" />
                             Student ID: {session.user.student_id}
                         </div>
                         {/if}
                         
-                        <div class="badge bg-primary-qss text-white py-3 px-3 sm:py-2 sm:px-2">
+                        <div class="badge bg-primary text-primary-content py-3 px-3 sm:py-2 sm:px-2">
                             <User class="w-3 h-3 mr-1" />
                             {session.user?.role || 'student'}
                         </div>
@@ -47,14 +47,12 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-auto flex justify-center lg:justify-end mt-2 lg:mt-0 shrink-0">
-                <SignOut redirectTo="/auth">
-                    <div slot="submitButton" class="btn btn-outline btn-sm sm:btn-md w-full sm:w-auto min-w-[120px]">
-                        <LogOut class="w-4 h-4" />
-                        Logout
-                    </div>
-                </SignOut>
-            </div>
+            <SignOut redirectTo="/auth">
+                <div slot="submitButton" class="w-full lg:w-auto flex justify-center lg:justify-end mt-2 lg:mt-0 shrink-0 btn btn-outline btn-sm sm:btn-md min-w-[120px]">
+                    <LogOut class="w-4 h-4" />
+                    Logout
+                </div>
+            </SignOut>
             
         </div>
     </div>

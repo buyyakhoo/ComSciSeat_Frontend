@@ -1,29 +1,20 @@
 <script lang="ts">
     import '../app.css'
-    import { Home, Calendar, User, LogOut, Sun, Moon, Users, X, Clock, Mail, Phone, CheckCircle, LogIn, ArrowLeft, GraduationCap } from 'lucide-svelte';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { page } from '$app/stores';
-
-    import NavBar from '$lib/components/NavBar.svelte';
-    import Header from '$lib/components/Header.svelte';
-    import Legend from '$lib/components/Legend.svelte';
-    import UserCard from '$lib/components/UserCard.svelte';
-
+    import NavBar from '$lib/components/initial/NavBar.svelte';
+    import Header from '$lib/components/main/Header.svelte';
+    import UserCard from '$lib/components/main/UserCard.svelte';
     import type { Session, LabRoom } from '$lib/shared/types';
-
     import { browser } from '$app/environment';
-  import RoomButton from '$lib/components/RoomButton.svelte';
+    import RoomButton from '$lib/components/card/RoomButton.svelte';
 
-    export let data: { 
-        session?: Session;
-    };
-
-    let labRooms: LabRoom[] = [];
+    const BACKEND_URL: string = import.meta.env.VITE_BACKEND_API_URL;
+    let { data }: { data?: { session?: Session } } = $props();
+    let labRooms: LabRoom[] = $state([]);
 
     const fetchLabsRoom = async () => {
         try {
-            const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL
             const response = await fetch(`${BACKEND_URL}/api/labs`, {
                 method: 'GET',
                 headers: {
@@ -35,24 +26,20 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
+            const responseData = await response.json();
 
-            if (!data.success || !Array.isArray(data.data)) {
-                console.error('Unexpected response format:', data);
+            if (!responseData.success || !Array.isArray(responseData.data)) {
+                console.error('Unexpected response format:', responseData);
                 return;
             }
-
-            labRooms = data.data
-
-            console.log('Fetched labs room data:', labRooms);
-        
+            
+            labRooms = responseData.data
         } catch (error) {
             console.error('Error fetching labs room data:', error);
         }
     }
 
-    // ตรวจสอบ session จาก data ที่ส่งมาจาก server
-    $: session = data.session;
+    const session = $derived(data?.session);
     
     // Redirect to auth if no session
     onMount(async () => {
@@ -62,9 +49,11 @@
         fetchLabsRoom();
     });
 
-    $: if (!session && browser) {
-        window.location.href = '/auth';
-    }
+    $effect(() => {
+        if (!session && browser) {
+            window.location.href = '/auth';
+        }
+    });
 </script>
 
 <svelte:head>
@@ -95,9 +84,16 @@
         <!-- Tables -->
         <div class="mb-8">
             <h3 class="text-xl font-bold mb-4">ห้องแลปคอม</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 justify-items-center">
                 {#each labRooms as labRoom}
-                    <RoomButton {labRoom} />
+                    <RoomButton 
+                        allowed={true}
+                        code={labRoom.lab_id.toString()}
+                        describe={labRoom.lab_name}
+                        onButton={() => {
+                            goto(`/lab_tables/${labRoom.lab_id}`);
+                        }}  
+                    />
                 {/each}
             </div>
         </div>

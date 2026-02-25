@@ -6,7 +6,7 @@
   import { onMount } from 'svelte';
   import { LogIn } from 'lucide-svelte';
   
-  let errorMessage = '';
+  let errorMessage: string = '';
   
   // ตรวจสอบ session เมื่อโหลดหน้า
   onMount(() => {
@@ -23,16 +23,16 @@
 </script>
 
 <svelte:head>
-  <title>เข้าสู่ระบบ - QuickSciSeat</title>
+  <title>เข้าสู่ระบบ - ComSciSeat</title>
 </svelte:head>
 
 <div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary via-primary to-secondary">
   <div class="card w-full max-w-md bg-base-100 shadow-2xl">
     <div class="card-body p-8 text-center">
       <!-- Logo -->
-      <div class="text-6xl mb-4">🍽️</div>
-      <h1 class="text-3xl font-bold text-base-content mb-2">QuickSciSeat</h1>
-      <p class="text-base-content/70 mb-6">ระบบจองโต๊ะอาหาร คณะวิทยาศาสตร์</p>
+      <div class="text-6xl mb-4">💻</div>
+      <h1 class="text-3xl font-bold text-base-content mb-2">ComSciSeat</h1>
+      <p class="text-base-content/70 mb-6">ระบบจองโต๊ะคอมในห้องแลป คณะวิทยาศาสตร์ สาขาวิทยาการคอมพิวเตอร์</p>
       
       <!-- Error Message -->
       {#if errorMessage}
@@ -63,7 +63,7 @@
       {/if}
       
       <div class="text-xs text-base-content/50 mt-6">
-        <p>© 2024 Science Faculty, KMITL</p>
+        <p>© 2026 Science Faculty, KMITL</p>
         <p class="mt-2 text-info">กรุณาใช้ email @kmitl.ac.th</p>
       </div>
     </div>
