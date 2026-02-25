@@ -1,7 +1,7 @@
 services:
   frontend:
     build: ./
-    image: quicksciseat_frontend
+    image: comsciseat_frontend
     ports:
       - "4173:4173"
     environment:
@@ -13,7 +13,7 @@ services:
       - AUTH_TRUST_HOST=true
       - AUTH_COOKIE_SECURE=true
       - PORT=4173
-      - ORIGIN=http://localhost:4173 #https://quicksciseat-frontend.onrender.com
+      - ORIGIN=http://localhost:4173
       - PROTOCOL_HEADER=x-forwarded-proto
       - HOST_HEADER=x-forwarded-host
     networks:
