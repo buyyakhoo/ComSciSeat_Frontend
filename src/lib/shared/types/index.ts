@@ -22,6 +22,7 @@ export interface LabData {
     tables: TableReservation[];
     status: string;
     statusDescribe: string;
+    isReserved: boolean;
     selectedDate: string;
     selectedTime: string;
 }

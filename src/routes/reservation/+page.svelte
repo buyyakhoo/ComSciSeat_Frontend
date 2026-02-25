@@ -134,7 +134,7 @@
                         <button 
                             class="btn btn-sm btn-error" 
                             onclick={() => {
-                                cancelReservationModal.showModal(reserved.booking_id, reserved.table_id, reserved.date, reserved.slot);
+                                cancelReservationModal.showModal(reserved.booking_id, reserved.table_id, reserved.table_code, reserved.date, reserved.slot);
                             }}
                         >
                             ยกเลิก

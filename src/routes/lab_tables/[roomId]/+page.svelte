@@ -20,6 +20,7 @@
         tables: [] as TableReservation[],
         status: 'OPENED',
         statusDescribe: '',
+        isReserved: false,
         selectedDate: '',
         selectedTime: '',
     });
@@ -30,6 +31,10 @@
 
     const reserveTable = async (tableId: number) => {
         try {
+            if (labData.isReserved) {
+                alert('คุณมีการจองโต๊ะในช่วงเวลานี้แล้ว กรุณายกเลิกการจองก่อนทำการจองใหม่');
+                return;
+            }
             await fetch(`${BACKEND_URL}/api/reservations/book`, {
                 method: 'POST',
                 headers: {
@@ -64,6 +69,7 @@
                 labData.tables = result.data;
                 labData.status = result.status;
                 labData.statusDescribe = result.message;
+                labData.isReserved = result.isReserved;
             }
         } catch (error) {
             console.error('Error fetching tables:', error);
@@ -151,7 +157,7 @@
                             notAllowedDisplay="จองแล้ว"  
                             onButton={() => {
                                 if (table.is_available) {
-                                    reservationModal.showModal(table.table_id, table.table_code, labData.selectedDate, labData.selectedTime);
+                                    reservationModal.showModal(table.table_id, table.table_code, labData.selectedDate, labData.selectedTime, labData.isReserved);
                                 }
                             }}
                         />  
