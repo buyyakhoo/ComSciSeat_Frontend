@@ -43,6 +43,17 @@ export interface ReservedTable {
     slot: string;
 }
 
+export interface ClassPeriod {
+    day_of_week: number;
+    slot: string;
+    subject: string;
+}
+
+export interface ScheduleData {
+    roomId: string | undefined;
+    classPeriods: ClassPeriod[];
+}
+
 // Auth Types
 export interface AuthCallbacks {
     signIn: (params: { user: UserStu; account?: any; profile?: any }) => Promise<boolean>;

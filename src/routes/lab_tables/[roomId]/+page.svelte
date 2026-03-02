@@ -10,10 +10,24 @@
     import { browser } from '$app/environment';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import ReservationModal from '$lib/components/modal/ReservationModal.svelte';
+  import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';
     
     const BACKEND_URL: string = import.meta.env.VITE_BACKEND_API_URL;
     let { data }: { data: PageData } = $props(); 
     let session = $derived(data?.session);
+
+    const mapSlotToDurationTime = (slot: string) => {
+        if (slot === "Morning") {
+            return "09:00 - 12:00"
+        }
+        else if (slot === "Lunch") {
+            return "12:00 - 13:00"
+        }
+        else if (slot === "Afternoon") {
+            return "13:00 - 16:00"
+        }
+        return "Error"
+    }
 
     let labData: LabData = $state({
         roomId: parseInt($page.params.roomId || "0"),
@@ -57,7 +71,6 @@
         isClicked = true;
         isLoading = true;
         try {
-            // Using your backend port 3000 and the route defined in index.ts
             const response = await fetch(`${BACKEND_URL}/api/reservations/availability?lab_id=${labData.roomId}&date=${labData.selectedDate}&slot=${labData.selectedTime}`, {
                 method: 'GET',
                 headers: {
@@ -97,16 +110,27 @@
 <!-- Content -->
 <div class="min-h-screen bg-base-200 p-4 lg:p-8">
     <div class="container flex flex-col gap-4 mx-auto max-w-6xl">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold">Lab Room {labData.roomId}</h1>
-                <p class="text-base-content/60">Live Seating Arrangement</p>
-            </div>
+
+        {#snippet labTableHeader()}
+            <h1 class="text-3xl font-bold">Lab Room {labData.roomId}</h1>
+            <p class="text-base-content/60">Live Seating Arrangement</p>
+        {/snippet}
+
+        {#snippet labTableActionCenter()}
+            <a href="/lab_tables/{labData.roomId}/schedule" class="btn btn-ghost gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2v4M16 2v4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 10h18M9 10v12M15 10v12M3 14h18M3 18h18" /></svg>
+                Classroom Schedule
+            </a>
+        {/snippet}
+
+        {#snippet labTableActionEnd()}
             <a href="/" class="btn btn-ghost gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 Back to Labs
             </a>
-        </div>
+        {/snippet}
+
+        <LabRoomCard title={labTableHeader} actionCenter={labTableActionCenter} actionEnd={labTableActionEnd} />
 
         <fieldset class="fieldset m-auto bg-base-200 border-base-300 rounded-box w-xs border p-4">
             <legend class="fieldset-legend">เลือกเวลาที่ต้องการจอง</legend>
@@ -149,7 +173,6 @@
                 <Legend />
                 <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 justify-items-center">
                     {#each labData.tables as table}
-                    <!-- making component on RoomButton -->
                         <RoomButton
                             allowed={table.is_available}
                             code={table.table_code}
@@ -157,7 +180,7 @@
                             notAllowedDisplay="จองแล้ว"  
                             onButton={() => {
                                 if (table.is_available) {
-                                    reservationModal.showModal(table.table_id, table.table_code, labData.selectedDate, labData.selectedTime, labData.isReserved);
+                                    reservationModal.showModal(table.table_id, table.table_code, labData.selectedDate, mapSlotToDurationTime(labData.selectedTime), labData.isReserved);
                                 }
                             }}
                         />  

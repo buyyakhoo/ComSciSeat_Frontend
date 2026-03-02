@@ -4,7 +4,7 @@
     import { goto } from '$app/navigation';
     import NavBar from '$lib/components/initial/NavBar.svelte';
     import Header from '$lib/components/main/Header.svelte';
-    import UserCard from '$lib/components/main/UserCard.svelte';
+    import UserCard from '$lib/components/card/UserCard.svelte';
     import type { Session, LabRoom } from '$lib/shared/types';
     import { browser } from '$app/environment';
     import RoomButton from '$lib/components/card/RoomButton.svelte';

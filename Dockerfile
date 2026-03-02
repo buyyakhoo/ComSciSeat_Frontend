@@ -13,6 +13,12 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
+# Catch the argument passed from docker-compose.yaml
+ARG VITE_BACKEND_API_URL
+
+# Set it as an environment variable so Vite can read it during the build
+ENV VITE_BACKEND_API_URL=$VITE_BACKEND_API_URL
+
 # Build the SvelteKit app
 RUN npm run build
 

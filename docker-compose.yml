@@ -1,6 +1,9 @@
 services:
   frontend:
-    build: ./
+    build:
+      context: ./
+      args:
+        - VITE_BACKEND_API_URL=http://backend:3000
     image: comsciseat_frontend
     ports:
       - "4173:4173"
@@ -9,7 +12,6 @@ services:
       - AUTH_GOOGLE_SECRET=${AUTH_GOOGLE_SECRET}
       - AUTH_SECRET=${AUTH_SECRET}
       - BACKEND_API_URL=http://backend:3000
-      - VITE_BACKEND_API_URL=http://backend:3000
       - AUTH_TRUST_HOST=true
       - AUTH_COOKIE_SECURE=true
       - PORT=4173

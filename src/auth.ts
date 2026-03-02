@@ -102,7 +102,7 @@ async function getUserDataFromBackend(email: string, backendToken: string) {
         console.error('Failed to fetch user data from backend');
         return null;
     }
-    
+
     const data = await response.json();
     if (!data.success) {
         console.error('Backend error:', data.error);

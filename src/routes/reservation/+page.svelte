@@ -31,6 +31,19 @@
         }
     ]);
 
+    const mapSlotToDurationTime = (slot: string) => {
+        if (slot === "Morning") {
+            return "09:00 - 12:00"
+        }
+        else if (slot === "Lunch") {
+            return "12:00 - 13:00"
+        }
+        else if (slot === "Afternoon") {
+            return "13:00 - 16:00"
+        }
+        return "Error"
+    }
+
     const loadReservations = async () => {
         loading = true
         try {
@@ -129,12 +142,12 @@
                     <th>{reserved.table_code}</th>
                     <th>{reserved.lab_name}</th>
                     <th>{reserved.date}</th>
-                    <th>{reserved.slot}</th>
+                    <th>{mapSlotToDurationTime(reserved.slot)}</th>
                     <th>
                         <button 
                             class="btn btn-sm btn-error" 
                             onclick={() => {
-                                cancelReservationModal.showModal(reserved.booking_id, reserved.table_id, reserved.table_code, reserved.date, reserved.slot);
+                                cancelReservationModal.showModal(reserved.booking_id, reserved.table_id, reserved.table_code, reserved.date, mapSlotToDurationTime(reserved.slot));
                             }}
                         >
                             ยกเลิก
