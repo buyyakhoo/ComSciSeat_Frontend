@@ -3,7 +3,7 @@ services:
     build:
       context: ./
       args:
-        - VITE_BACKEND_API_URL=http://backend:3000
+        - VITE_BACKEND_API_URL=http://localhost:3000
     image: comsciseat_frontend
     ports:
       - "4173:4173"
@@ -15,7 +15,7 @@ services:
       - AUTH_TRUST_HOST=true
       - AUTH_COOKIE_SECURE=true
       - PORT=4173
-      - ORIGIN=http://localhost:4173
+      - ORIGIN=https://135a-49-49-231-112.ngrok-free.app
       - PROTOCOL_HEADER=x-forwarded-proto
       - HOST_HEADER=x-forwarded-host
     networks:

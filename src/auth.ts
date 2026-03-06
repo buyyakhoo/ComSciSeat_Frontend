@@ -62,6 +62,20 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                 return token;
             },
             async session({ session, token }: { session: Record<string, any>, token: any }) {
+                if (!token.backendToken && session.user?.email) {
+                    const response = await fetch(`${env.BACKEND_API_URL}/api/user/get-token`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'X-Internal-Secret': env.INTERNAL_SECRET 
+                        },
+                        body: JSON.stringify({ email: session.user.email })
+                    });
+                    const data = await response.json();
+                    if (data.token) {
+                        token.backendToken = data.token;
+                    }
+                }
                 if (token.backendToken) {
                     session.backendToken = token.backendToken;
                 }
@@ -82,7 +96,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString() // Example: 7 days from now
                 };
             }
-        }
+        },
     }
     return authOptions;
 });

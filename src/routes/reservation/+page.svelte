@@ -4,105 +4,43 @@
     import { AlertCircle } from 'lucide-svelte';
     import { goto } from '$app/navigation';
     import { browser } from '$app/environment';
-    import NavBar from '$lib/components/initial/NavBar.svelte';
+    import NavBar from '$lib/components/web_layout/NavBar.svelte';
     import type { PageData } from './$types';
     import Table from '$lib/components/table/Table.svelte';
     import CancelReservationModal from '$lib/components/modal/CancelReservationModal.svelte';
     import type { ReservedTable } from '$lib/shared/types';
+    import { enhance } from '$app/forms';
+    import { mapSlotToDurationTime } from '$lib/shared/utils';
     
-    const BACKEND_URL: string = import.meta.env.VITE_BACKEND_API_URL;
     let { data }: { data: PageData } = $props(); 
     let session = $derived(data.session);
 
-    let loading: boolean = $state(true);
-    let error: string = $state('');
-
+    let loading: boolean = $state(false)
+    let reservedTables: ReservedTable[] = $derived(data.reservedTables)
+    let error: string = $derived(data.error)
     let cancelReservationModal: ReturnType<typeof CancelReservationModal>;
 
-    let reservedTables: ReservedTable[] = $state([
-        {
-            booking_id: 0,
-            table_id: 0,
-            table_code: '',
-            lab_id: 0,
-            lab_name: '',
-            date: '',
-            slot: ''
-        }
-    ]);
+    const isPast = (dateStr: string, slot: string) => {
+        const now = new Date()
+        const bkkNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }))
+        const bookingDate = new Date(dateStr)
+        bookingDate.setHours(0, 0, 0, 0)
+        bkkNow.setHours(0, 0, 0, 0)
 
-    const mapSlotToDurationTime = (slot: string) => {
-        if (slot === "Morning") {
-            return "09:00 - 12:00"
-        }
-        else if (slot === "Lunch") {
-            return "12:00 - 13:00"
-        }
-        else if (slot === "Afternoon") {
-            return "13:00 - 16:00"
-        }
-        return "Error"
-    }
+        if (bookingDate < bkkNow) return true 
+        if (bookingDate > bkkNow) return false
 
-    const loadReservations = async () => {
-        loading = true
-        try {
-            const response = await fetch(`${BACKEND_URL}/api/reservations/my-bookings`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session?.backendToken || ''}`
-                }
-            })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const responseData = await response.json()
-            const reservations = responseData.data;
-
-            reservedTables = reservations.map((reservation: any) => ({
-                booking_id: reservation.booking_id,
-                table_id: reservation.table_id,
-                table_code: reservation.tables.table_code,
-                lab_id: reservation.tables.lab_id,
-                lab_name: reservation.tables.labs.lab_name,
-                date: reservation.booking_date.slice(0, 10),
-                slot: reservation.slot
-            }))
-
-        } catch (error) {
-            console.error('Error loading reservations:', error);
-        } finally {
-            loading = false;
-        }
-    }
-
-    const cancelReservation = async (bookingId: number) => {
-        try {
-            const response = await fetch(`${BACKEND_URL}/api/reservations/cancel/${bookingId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session?.backendToken || ''}`
-                }
-            })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            await loadReservations();
-        } catch (error) {
-            console.error('Error canceling reservation:', error);
-        }
+        const currentHour = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Bangkok" })).getHours()
+        if (slot === "Morning") return currentHour >= 9
+        if (slot === "Lunch") return currentHour >= 12
+        if (slot === "Afternoon") return currentHour >= 13
+        return false
     }
 
     onMount(async () => {
         if (!session) {
             goto('/auth');
         }
-        await loadReservations();
     });
 
     $effect(() => {
@@ -144,14 +82,35 @@
                     <th>{reserved.date}</th>
                     <th>{mapSlotToDurationTime(reserved.slot)}</th>
                     <th>
-                        <button 
-                            class="btn btn-sm btn-error" 
-                            onclick={() => {
-                                cancelReservationModal.showModal(reserved.booking_id, reserved.table_id, reserved.table_code, reserved.date, mapSlotToDurationTime(reserved.slot));
-                            }}
-                        >
-                            ยกเลิก
-                        </button>
+                        {#if !isPast(reserved.date, reserved.slot)}
+                            <form
+                                id="cancel-form-{reserved.booking_id}"
+                                method="POST"
+                                action="?/cancel"
+                                use:enhance={() => {
+                                    loading = true;
+                                    return async ({ update }) => {
+                                        await update();
+                                        loading = false;
+                                    };
+                                }}
+                            >
+                                <input type="hidden" name="bookingId" value={reserved.booking_id} />
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-error"
+                                    onclick={() => cancelReservationModal.showModal(
+                                        reserved.booking_id,
+                                        reserved.table_id,
+                                        reserved.table_code,
+                                        reserved.date,
+                                        mapSlotToDurationTime(reserved.slot)
+                                    )}
+                                >
+                                    ยกเลิก
+                                </button>
+                            </form>
+                        {/if}
                     </th>
                 {/snippet}
 
@@ -164,6 +123,6 @@
 <CancelReservationModal 
     bind:this={cancelReservationModal} 
     onReservationCancelSuccess={(bookingId: number) =>{
-        cancelReservation(bookingId);
+        (document.getElementById(`cancel-form-${bookingId}`) as HTMLFormElement)?.requestSubmit();
     }}
 />

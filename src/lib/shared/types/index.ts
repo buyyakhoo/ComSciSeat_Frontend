@@ -1,10 +1,10 @@
 // User and Session Types
 export interface UserStu {
-    name?: string;
-    email?: string;
-    image?: string;
-    student_id?: string;
-    role?: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    student_id?: string | null;
+    role?: string | null;
 }
 
 export interface Session {
@@ -20,6 +20,8 @@ export interface LabRoom {
 export interface LabData {
     roomId: number;
     tables: TableReservation[];
+    bookings: ReservedTable[]
+    classPeriods: ClassPeriod[];
     status: string;
     statusDescribe: string;
     isReserved: boolean;
@@ -50,7 +52,7 @@ export interface ClassPeriod {
 }
 
 export interface ScheduleData {
-    roomId: string | undefined;
+    roomId: number | undefined;
     classPeriods: ClassPeriod[];
 }
 

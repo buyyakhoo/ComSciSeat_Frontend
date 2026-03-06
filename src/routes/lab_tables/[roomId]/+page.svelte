@@ -1,37 +1,27 @@
 <script lang="ts">
     import '../../../app.css'
-    import { page } from '$app/stores';
-    import NavBar from '$lib/components/initial/NavBar.svelte';
+    import NavBar from '$lib/components/web_layout/NavBar.svelte';
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import type { PageData } from './$types';
     import Legend from '$lib/components/lab/Legend.svelte';
-    import type { LabData, TableReservation } from '$lib/shared/types';
+    import type { LabData } from '$lib/shared/types';
     import { browser } from '$app/environment';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import ReservationModal from '$lib/components/modal/ReservationModal.svelte';
-  import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';
+    import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';
+    import ClassScheduleModal from '$lib/components/modal/ClassScheduleModal.svelte';
+    import TimeDaySelect from '$lib/components/form/TimeDaySelect.svelte';
+    import { mapSlotToDurationTime } from '$lib/shared/utils';
     
-    const BACKEND_URL: string = import.meta.env.VITE_BACKEND_API_URL;
-    let { data }: { data: PageData } = $props(); 
+    let { data, form } = $props();
     let session = $derived(data?.session);
 
-    const mapSlotToDurationTime = (slot: string) => {
-        if (slot === "Morning") {
-            return "09:00 - 12:00"
-        }
-        else if (slot === "Lunch") {
-            return "12:00 - 13:00"
-        }
-        else if (slot === "Afternoon") {
-            return "13:00 - 16:00"
-        }
-        return "Error"
-    }
-
     let labData: LabData = $state({
-        roomId: parseInt($page.params.roomId || "0"),
-        tables: [] as TableReservation[],
+        roomId: data.roomId,
+        tables: [],
+        bookings: data.bookings,
+        classPeriods: data.classPeriods,
         status: 'OPENED',
         statusDescribe: '',
         isReserved: false,
@@ -42,67 +32,36 @@
     let isLoading: boolean = $state(false);
     let isClicked: boolean = $state(false);
     let reservationModal: ReturnType<typeof ReservationModal>;
+    let classScheduleModal: ReturnType<typeof ClassScheduleModal>;
 
-    const reserveTable = async (tableId: number) => {
-        try {
-            if (labData.isReserved) {
-                alert('คุณมีการจองโต๊ะในช่วงเวลานี้แล้ว กรุณายกเลิกการจองก่อนทำการจองใหม่');
-                return;
-            }
-            await fetch(`${BACKEND_URL}/api/reservations/book`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session?.backendToken || ''}`
-                },
-                body: JSON.stringify({
-                    table_id: tableId,
-                    date: labData.selectedDate,
-                    slot: labData.selectedTime
-                })
-            })
-        } catch (error) {
-            console.error('Error reserving table:', error);
-        }
-        await fetchTables();
+    const getTodayDate = () => {
+        const today = new Date();
+        return today.toLocaleDateString("en-CA", {
+            timeZone: 'Asia/Bangkok'
+        })
     }
 
-    const fetchTables = async () => {
-        isClicked = true;
-        isLoading = true;
-        try {
-            const response = await fetch(`${BACKEND_URL}/api/reservations/availability?lab_id=${labData.roomId}&date=${labData.selectedDate}&slot=${labData.selectedTime}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            const result = await response.json();
-            if (result.success) {
-                labData.tables = result.data;
-                labData.status = result.status;
-                labData.statusDescribe = result.message;
-                labData.isReserved = result.isReserved;
-            }
-        } catch (error) {
-            console.error('Error fetching tables:', error);
-        } finally {
-            isLoading = false;
-        }
-    };
+    const isSlotDisabled = (slotValue: string, selectedDate: string) => {
+        const isBooking = labData.bookings
+                .some(booking => booking.date === selectedDate && booking.slot === slotValue)
+        if (isBooking) return true
 
-    onMount(async () => {
-        if (!session) {
-            goto('/auth');
-        }
-    });
+        const selectedDayNum = new Date(selectedDate).getDay();
+        const isClass = labData.classPeriods
+                .some(period => period.day_of_week === selectedDayNum && period.slot === slotValue)
+        if (isClass) return true
 
-    $effect(() => {
-        if (!session && browser) {
-            window.location.href = '/auth';
-        }
-    });
+        if (selectedDate !== getTodayDate()) return false
 
+        const bkkTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" })
+        const currentHour = new Date(bkkTime).getHours()
+
+        if (slotValue === 'Morning') return currentHour >= 9
+        if (slotValue === 'Lunch') return currentHour >= 12;
+        if (slotValue === 'Afternoon') return currentHour >= 13
+
+        return false
+    }
 </script>
 
 <NavBar {session} />
@@ -117,10 +76,10 @@
         {/snippet}
 
         {#snippet labTableActionCenter()}
-            <a href="/lab_tables/{labData.roomId}/schedule" class="btn btn-ghost gap-2">
+            <button class="btn btn-ghost gap-2" onclick={() => classScheduleModal.showModal(labData.roomId, labData.classPeriods)}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2v4M16 2v4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 10h18M9 10v12M15 10v12M3 14h18M3 18h18" /></svg>
                 Classroom Schedule
-            </a>
+            </button>
         {/snippet}
 
         {#snippet labTableActionEnd()}
@@ -132,22 +91,20 @@
 
         <LabRoomCard title={labTableHeader} actionCenter={labTableActionCenter} actionEnd={labTableActionEnd} />
 
-        <fieldset class="fieldset m-auto bg-base-200 border-base-300 rounded-box w-xs border p-4">
-            <legend class="fieldset-legend">เลือกเวลาที่ต้องการจอง</legend>
-
-            <label class="label" for="dateInput">วันที่</label>
-            <input id="dateInput" type="date" class="input" bind:value={labData.selectedDate} />
-
-            <label class="label" for="timeInput">เวลา</label>
-            <select id="timeInput" class="select" bind:value={labData.selectedTime}>
-                <option disabled selected>เลือกเวลา</option>
-                <option value="Morning">09:00 - 12:00</option>
-                <option value="Lunch">12:00 - 13:00</option>
-                <option value="Afternoon">13:00 - 16:00</option>
-            </select>
-
-             <button class="btn btn-neutral mt-4" onclick={() => fetchTables()}>เลือกเวลา</button>
-        </fieldset> 
+        <TimeDaySelect 
+            getTodayDate={getTodayDate} 
+            isSlotDisabled={isSlotDisabled} 
+            labData={labData} 
+            onResult={(result: any) => {
+                if (result?.type === 'success' && result?.data) {
+                    labData.tables = result.data.tables;
+                    labData.status = result.data.status;
+                    labData.statusDescribe = result.data.statusDescribe;
+                    labData.isReserved = result.data.isReserved;
+                    isClicked = true;
+                }
+            }}
+        />
 
         {#if !isClicked}
             <div class="alert alert-info shadow-lg">
@@ -180,7 +137,14 @@
                             notAllowedDisplay="จองแล้ว"  
                             onButton={() => {
                                 if (table.is_available) {
-                                    reservationModal.showModal(table.table_id, table.table_code, labData.selectedDate, mapSlotToDurationTime(labData.selectedTime), labData.isReserved);
+                                    reservationModal.showModal(
+                                        table.table_id, 
+                                        table.table_code, 
+                                        labData.selectedDate, 
+                                        labData.selectedTime, 
+                                        labData.isReserved,
+                                        labData.roomId
+                                    );
                                 }
                             }}
                         />  
@@ -193,7 +157,17 @@
 
 <ReservationModal 
     bind:this={reservationModal}
-    onReservationSuccess={(tableId: number) => {
-        reserveTable(tableId);
+    onReservationSuccess={(resultData: any) => {
+        if (resultData?.tables) {
+            labData.tables = resultData.tables;
+            labData.isReserved = resultData.isReserved;
+            labData.status = resultData.status;
+            labData.statusDescribe = resultData.statusDescribe;
+        }
     }}
+/>
+
+<ClassScheduleModal
+    bind:this={classScheduleModal}
+    {mapSlotToDurationTime}
 />
