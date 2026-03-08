@@ -7,7 +7,13 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     if (!session) {
         redirect(302, '/auth');
     }
-    const response = await fetch(`${BACKEND_API_URL}/api/labs`);
+    const response = await fetch(`${BACKEND_API_URL}/api/labs`, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.backendToken}`
+        }
+    });
     const responseData = await response.json();
     return {
         session,

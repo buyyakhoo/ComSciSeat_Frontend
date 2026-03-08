@@ -27,19 +27,11 @@
         </div>
     </div>
 {:else}
-
     <NavBar {session} />
-
-    <!-- Content -->
     <div class="min-h-screen bg-base-200">
         <div class="container mx-auto px-4 py-8 max-w-7xl">    
-            <!-- Header -->
             <Header />
-
-            <!-- User Info Card -->
             <UserCard {session} />
-            
-            <!-- Tables -->
             <div class="mb-8">
                 <h3 class="text-xl font-bold mb-4">ห้องแลปคอม</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 justify-items-center">

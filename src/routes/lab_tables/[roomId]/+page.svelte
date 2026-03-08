@@ -5,29 +5,32 @@
     import { onMount } from 'svelte';
     import type { PageData } from './$types';
     import Legend from '$lib/components/lab/Legend.svelte';
-    import type { LabData } from '$lib/shared/types';
+    import type { LabData, LabHandleSelected } from '$lib/shared/types';
     import { browser } from '$app/environment';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import ReservationModal from '$lib/components/modal/ReservationModal.svelte';
     import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';
     import ClassScheduleModal from '$lib/components/modal/ClassScheduleModal.svelte';
-    import TimeDaySelect from '$lib/components/form/TimeDaySelect.svelte';
+    import TimeDaySelect from '$lib/components/form_select/TimeDaySelect.svelte';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
     
     let { data, form } = $props();
     let session = $derived(data?.session);
 
-    let labData: LabData = $state({
+    let labData: LabData = $derived({
         roomId: data.roomId,
-        tables: [],
         bookings: data.bookings,
         classPeriods: data.classPeriods,
+    });
+
+    let labHandleSelected: LabHandleSelected = $state({
+        tables: [],
         status: 'OPENED',
         statusDescribe: '',
         isReserved: false,
         selectedDate: '',
         selectedTime: '',
-    });
+    })
 
     let isLoading: boolean = $state(false);
     let isClicked: boolean = $state(false);
@@ -41,15 +44,23 @@
         })
     }
 
-    const isSlotDisabled = (slotValue: string, selectedDate: string) => {
+    const checkIsBooking = (selectedDate: string, slotValue: string) => {
         const isBooking = labData.bookings
-                .some(booking => booking.date === selectedDate && booking.slot === slotValue)
+                        .some(booking => booking.date === selectedDate && booking.slot === slotValue)
         if (isBooking) return true
+    }
 
-        const selectedDayNum = new Date(selectedDate).getDay();
+    const checkIsCard = (selectedDayNum: number, slotValue: string) => {
         const isClass = labData.classPeriods
                 .some(period => period.day_of_week === selectedDayNum && period.slot === slotValue)
         if (isClass) return true
+    }
+
+    const isSlotDisabled = (slotValue: string, selectedDate: string) => {
+        if (checkIsBooking(selectedDate, slotValue)) return true
+
+        const selectedDayNum = new Date(selectedDate).getDay();
+        if (checkIsCard(selectedDayNum, slotValue)) return true
 
         if (selectedDate !== getTodayDate()) return false
 
@@ -97,10 +108,10 @@
             labData={labData} 
             onResult={(result: any) => {
                 if (result?.type === 'success' && result?.data) {
-                    labData.tables = result.data.tables;
-                    labData.status = result.data.status;
-                    labData.statusDescribe = result.data.statusDescribe;
-                    labData.isReserved = result.data.isReserved;
+                    labHandleSelected.tables = result.data.tables;
+                    labHandleSelected.status = result.data.status;
+                    labHandleSelected.statusDescribe = result.data.statusDescribe;
+                    labHandleSelected.isReserved = result.data.isReserved;
                     isClicked = true;
                 }
             }}
@@ -115,12 +126,12 @@
             <div class="flex justify-center items-center h-64">
                 <span class="loading loading-spinner loading-lg text-primary"></span>
             </div>
-        {:else if labData.tables.length === 0 && labData.status === 'CLOSED'}
+        {:else if labHandleSelected.tables.length === 0 && labHandleSelected.status === 'CLOSED'}
             <div class="alert alert-error shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                <span>{labData.statusDescribe}</span>
+                <span>{labHandleSelected.statusDescribe}</span>
             </div>
-        {:else if labData.tables.length === 0 && labData.status === 'OPENED'}
+        {:else if labHandleSelected.tables.length === 0 && labHandleSelected.status === 'OPENED'}
             <div class="alert alert-info shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span>ไม่มีโต๊ะในห้องนี้</span>
@@ -129,7 +140,7 @@
             <div class="bg-base-100 rounded-3xl p-8 lg:p-12 shadow-xl border border-base-300">
                 <Legend />
                 <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 justify-items-center">
-                    {#each labData.tables as table}
+                    {#each labHandleSelected.tables as table}
                         <RoomButton
                             allowed={table.is_available}
                             code={table.table_code}
@@ -140,9 +151,9 @@
                                     reservationModal.showModal(
                                         table.table_id, 
                                         table.table_code, 
-                                        labData.selectedDate, 
-                                        labData.selectedTime, 
-                                        labData.isReserved,
+                                        labHandleSelected.selectedDate, 
+                                        labHandleSelected.selectedTime, 
+                                        labHandleSelected.isReserved,
                                         labData.roomId
                                     );
                                 }
@@ -159,10 +170,10 @@
     bind:this={reservationModal}
     onReservationSuccess={(resultData: any) => {
         if (resultData?.tables) {
-            labData.tables = resultData.tables;
-            labData.isReserved = resultData.isReserved;
-            labData.status = resultData.status;
-            labData.statusDescribe = resultData.statusDescribe;
+            labHandleSelected.tables = resultData.tables;
+            labHandleSelected.isReserved = resultData.isReserved;
+            labHandleSelected.status = resultData.status;
+            labHandleSelected.statusDescribe = resultData.statusDescribe;
         }
     }}
 />

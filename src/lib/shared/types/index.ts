@@ -19,9 +19,12 @@ export interface LabRoom {
 
 export interface LabData {
     roomId: number;
-    tables: TableReservation[];
     bookings: ReservedTable[]
     classPeriods: ClassPeriod[];
+}
+
+export interface LabHandleSelected {
+    tables: TableReservation[];
     status: string;
     statusDescribe: string;
     isReserved: boolean;

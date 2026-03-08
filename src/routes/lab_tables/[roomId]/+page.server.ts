@@ -22,7 +22,10 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
 
         fetch(`${env.BACKEND_API_URL}/api/labs/${roomId}/class_schedule`, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${backendToken}`
+            }
         })
     ])
 

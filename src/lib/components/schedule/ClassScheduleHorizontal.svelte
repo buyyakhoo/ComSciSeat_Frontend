@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { ScheduleData } from "$lib/shared/types";
+    import HorizontalDay from "./HorizontalDay.svelte";
     
     interface ClassScheduleHorizontalProps {
         times: string[]
@@ -8,7 +9,13 @@
         mapSlotToDurationTime: (slot: string) => string
         getGridClasses: (slot: string) => string
     }
-    
+
+    const classPeriodFilterDay = (day: string) => {
+        const slotOrder = ['Morning', 'Lunch', 'Afternoon']
+        return scheduleData.classPeriods
+                            .filter(p => weekdays[p.day_of_week-1] === day)
+                            .sort((a, b) => slotOrder.indexOf(a.slot) - slotOrder.indexOf(b.slot))
+    }
     let { times, weekdays, scheduleData, mapSlotToDurationTime, getGridClasses }: ClassScheduleHorizontalProps = $props();
 </script>
 
@@ -24,20 +31,13 @@
 
             <div class="flex flex-col gap-3">
                 {#each weekdays as day}
-                    <div class="grid grid-cols-8 gap-2 h-12">
-                        <div class="flex items-center pr-4 text-sm font-semibold text-base-content/70">
-                            {day.slice(0, 3)}
-                        </div>
-                        
-                        <div class="grid grid-cols-7 col-span-7 gap-1 rounded-lg p-1 relative">
-                            {#each scheduleData.classPeriods.filter(p => weekdays[p.day_of_week-1] === day) as period}
-                                <div class="rounded-lg h-12 p-2 shadow-sm flex flex-col justify-center overflow-hidden {getGridClasses(period.slot)} hover:opacity-90 transition-opacity cursor-pointer">
-                                    <span class="font-bold text-sm truncate">{period.subject}</span>
-                                    <span class="text-xs opacity-80 truncate">{mapSlotToDurationTime(period.slot)}</span>
-                                </div>
-                            {/each}
-                        </div>
-                    </div>
+                    <HorizontalDay 
+                        {day} 
+                        {scheduleData} 
+                        {mapSlotToDurationTime} 
+                        {getGridClasses}
+                        {classPeriodFilterDay}
+                    />
                 {/each}
             </div>
         </div>

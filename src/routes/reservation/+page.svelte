@@ -15,7 +15,6 @@
     let { data }: { data: PageData } = $props(); 
     let session = $derived(data.session);
 
-    let loading: boolean = $state(false)
     let reservedTables: ReservedTable[] = $derived(data.reservedTables)
     let error: string = $derived(data.error)
     let cancelReservationModal: ReturnType<typeof CancelReservationModal>;
@@ -56,11 +55,7 @@
     <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl font-bold mb-8 text-center text-base-content">การจองของฉัน</h1>
         
-        {#if loading}
-            <div class="flex justify-center items-center py-20">
-                <span class="loading loading-spinner loading-lg"></span>
-            </div>
-        {:else if error}
+        {#if error}
             <div class="alert alert-error shadow-lg">
                 <AlertCircle class="w-6 h-6" />
                 <span>{error}</span>
@@ -88,10 +83,8 @@
                                 method="POST"
                                 action="?/cancel"
                                 use:enhance={() => {
-                                    loading = true;
                                     return async ({ update }) => {
                                         await update();
-                                        loading = false;
                                     };
                                 }}
                             >

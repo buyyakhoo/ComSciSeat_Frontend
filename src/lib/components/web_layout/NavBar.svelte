@@ -5,7 +5,6 @@
     import type { UserStu as UserData } from '$lib/shared/types';
 
     let { session } = $props<{ session?: { user?: UserData } | null }>();
-    session = session || null;
     let currentTheme: string = $state('light');
     
     onMount(() => {

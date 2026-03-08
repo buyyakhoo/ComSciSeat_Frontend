@@ -9,7 +9,13 @@
     let date: string = $state('');
     let slot: string = $state('');
 
-    export const showModal = (bookingIdValue: number, tableIdValue: number, tableCodeValue: string, dateValue: string, slotValue: string) => {
+    export const showModal = (
+        bookingIdValue: number, 
+        tableIdValue: number, 
+        tableCodeValue: string, 
+        dateValue: string, 
+        slotValue: string
+    ) => {
         dialogElement.showModal();
         bookingId = bookingIdValue;
         tableId = tableIdValue;
