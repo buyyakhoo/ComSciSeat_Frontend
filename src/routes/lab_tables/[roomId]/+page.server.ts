@@ -73,10 +73,17 @@ export const actions: Actions = {
             `${env.BACKEND_API_URL}/api/reservations/check-table-availability?lab_id=${lab_id}&date=${date}&slot=${slot}`,
             { 
                 headers: { 
-                        'Content-Type': 'application/json' 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.backendToken}`
                     } 
             }
         );
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error('Check availability failed:', text);
+            return { tables: [], status: 'CLOSED', statusDescribe: 'ไม่สามารถตรวจสอบได้', isReserved: false};
+        }
 
         const result = await response.json();
         return {
@@ -116,7 +123,8 @@ export const actions: Actions = {
             `${env.BACKEND_API_URL}/api/reservations/check-table-availability?lab_id=${formData.get('lab_id')}&date=${formData.get('date')}&slot=${formData.get('slot')}`,
             { 
                 headers: { 
-                    'Content-Type': 'application/json' 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.backendToken}`
                 } 
             }
         );

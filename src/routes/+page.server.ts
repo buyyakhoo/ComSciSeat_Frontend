@@ -7,16 +7,28 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     if (!session) {
         redirect(302, '/auth');
     }
-    const response = await fetch(`${BACKEND_API_URL}/api/labs`, {
+    const roomResponse = await fetch(`${BACKEND_API_URL}/api/labs`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session.backendToken}`
         }
     });
-    const responseData = await response.json();
+    const roomResponseData = await roomResponse.json();
+    const labRooms = roomResponseData.success ? roomResponseData.data : [];
+
+    const bookingStatsResponse = await fetch(`${BACKEND_API_URL}/api/reservations/booking-stats`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.backendToken}`
+        }
+    });
+    const bookingStatsResponseData = await bookingStatsResponse.json();
+    const bookingStats = bookingStatsResponseData.success ? bookingStatsResponseData.data : {};
     return {
         session,
-        labRooms: responseData.success ? responseData.data : []
+        labRooms,
+        bookingStats
     }
-}   
+}

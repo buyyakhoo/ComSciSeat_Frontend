@@ -47,20 +47,21 @@
     const checkIsBooking = (selectedDate: string, slotValue: string) => {
         const isBooking = labData.bookings
                         .some(booking => booking.date === selectedDate && booking.slot === slotValue)
-        if (isBooking) return true
+        return isBooking
     }
 
-    const checkIsCard = (selectedDayNum: number, slotValue: string) => {
+    const checkIsClass = (selectedDayNum: number, slotValue: string) => {
         const isClass = labData.classPeriods
                 .some(period => period.day_of_week === selectedDayNum && period.slot === slotValue)
-        if (isClass) return true
+        return isClass
     }
 
     const isSlotDisabled = (slotValue: string, selectedDate: string) => {
+        if (!selectedDate) return true
         if (checkIsBooking(selectedDate, slotValue)) return true
 
-        const selectedDayNum = new Date(selectedDate).getDay();
-        if (checkIsCard(selectedDayNum, slotValue)) return true
+        const selectedDayNum = new Date(selectedDate + 'T00:00:00').getDay();
+        if (checkIsClass(selectedDayNum, slotValue)) return true
 
         if (selectedDate !== getTodayDate()) return false
 
@@ -103,12 +104,13 @@
         <LabRoomCard title={labTableHeader} actionCenter={labTableActionCenter} actionEnd={labTableActionEnd} />
 
         <TimeDaySelect 
-            getTodayDate={getTodayDate} 
+            getTodayDate={getTodayDate}
             isSlotDisabled={isSlotDisabled} 
-            labData={labData} 
+            bind:labHandleSelected={labHandleSelected} 
+            labData={labData}
             onResult={(result: any) => {
                 if (result?.type === 'success' && result?.data) {
-                    labHandleSelected.tables = result.data.tables;
+                    labHandleSelected.tables = result.data.tables ?? [];
                     labHandleSelected.status = result.data.status;
                     labHandleSelected.statusDescribe = result.data.statusDescribe;
                     labHandleSelected.isReserved = result.data.isReserved;

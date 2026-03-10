@@ -14,14 +14,10 @@
 
 <NavBar {session} />
 
-<!-- Content -->
 <div class="min-h-screen bg-base-200">
     <div class="container mx-auto px-4 py-8 max-w-md">
-        
-        <!-- Profile Card -->
         <div class="card bg-base-100 shadow-2xl">
             <div class="card-body">
-                <!-- Profile Avatar -->
                 <div class="flex justify-center mb-6">
                     <div class="avatar online placeholder">
                         <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -36,10 +32,7 @@
                     </div>
                 </div>
 
-                <!-- Profile Information -->
                 <div class="space-y-3 card-body items-center">
-                    
-                    <!-- Name Field -->
                     <div class="form-control w-full">
                         <label class="label" for="nameInput">
                             <span class="label-text font-semibold">Name</span>
@@ -48,8 +41,6 @@
                             <span class="font-medium">{session?.user?.name}</span>
                         </div>
                     </div>
-
-                    <!-- ID Field -->
                     <div class="form-control w-full">
                         <label class="label" for="idInput">
                             <span class="label-text font-semibold">ID</span>
@@ -58,8 +49,6 @@
                             <span class="font-medium">{session?.user?.student_id}</span>
                         </div>
                     </div>
-
-                    <!-- Email Field -->
                     <div class="form-control w-full">
                         <label class="label" for="emailInput">
                             <span class="label-text font-semibold">E-Mail</span>
@@ -68,8 +57,6 @@
                             <span class="font-medium">{session?.user?.email}</span>
                         </div>
                     </div>
-
-                    <!-- Role Badge -->
                     <div class="form-control w-full">
                         <label class="label" for="roleInput">
                             <span class="label-text font-semibold">Role</span>
@@ -83,13 +70,10 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
 
-        <!-- Back to Home Button -->
         <div class="mt-6 flex justify-center">
             <a href="/" class="btn btn-ghost gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,6 +82,5 @@
                 กลับสู่หน้าหลัก
             </a>
         </div>
-
     </div>
 </div>

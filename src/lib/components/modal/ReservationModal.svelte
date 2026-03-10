@@ -28,15 +28,7 @@
         isReserved = isReservedValue;
         labId = labIdValue;
         dialogElement.showModal();
-    }
-    
-    const handleConfirm = () => {
-        if (onReservationSuccess) {
-            onReservationSuccess(tableId);
-        }
-        dialogElement.close();
-    }
-    
+    }    
 </script>
 
 <dialog bind:this={dialogElement} class="modal modal-bottom sm:modal-middle">
@@ -79,7 +71,7 @@
                 action="?/reserve"
                 use:enhance={() => {
                     return async ({ result, update }: { result: any, update: (opts?: any) => Promise<void> }) => {
-                        await update({ invalidateAll: false }); // ← เพิ่ม
+                        await update({ invalidateAll: false });
                         dialogElement.close();
                         onReservationSuccess?.(result.data);
                     };

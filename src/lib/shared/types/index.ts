@@ -17,6 +17,13 @@ export interface LabRoom {
     lab_name: string;
 }
 
+export interface BookingStats {
+    userUpcoming: number,
+    userTotal: number,
+    allTotal: number,
+    percentage: number
+}
+
 export interface LabData {
     roomId: number;
     bookings: ReservedTable[]
