@@ -24,6 +24,12 @@ export interface BookingStats {
     percentage: number
 }
 
+export interface BookingStatsDescribe {
+    title: string;
+    value: number | string;
+    desc: string;
+}
+
 export interface LabData {
     roomId: number;
     bookings: ReservedTable[]

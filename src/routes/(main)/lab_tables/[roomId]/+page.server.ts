@@ -108,8 +108,10 @@ export const actions: Actions = {
             },
             body: JSON.stringify({
                 table_id: Number(formData.get('table_id')),
+                table_code: formData.get('table_code'),
                 date: formData.get('date'),
-                slot: formData.get('slot')
+                slot: formData.get('slot'),
+                lab_id: Number(formData.get('lab_id'))
             })
         });
 

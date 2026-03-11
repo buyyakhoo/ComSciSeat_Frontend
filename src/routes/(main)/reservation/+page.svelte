@@ -1,16 +1,15 @@
 <script lang="ts">
-    import '../../app.css';
     import { onMount } from 'svelte';
-    import { AlertCircle } from 'lucide-svelte';
+    import { AlertCircle, TruckElectric } from 'lucide-svelte';
     import { goto } from '$app/navigation';
     import { browser } from '$app/environment';
-    import NavBar from '$lib/components/web_layout/NavBar.svelte';
     import type { PageData } from './$types';
     import Table from '$lib/components/table/Table.svelte';
     import CancelReservationModal from '$lib/components/modal/CancelReservationModal.svelte';
     import type { ReservedTable } from '$lib/shared/types';
     import { enhance } from '$app/forms';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
+    import LoadingScreen from '$lib/components/decorate/LoadingScreen.svelte';
     
     let { data }: { data: PageData } = $props(); 
     let session = $derived(data.session);
@@ -18,6 +17,7 @@
     let reservedTables: ReservedTable[] = $derived(data.reservedTables)
     let error: string = $derived(data.error)
     let cancelReservationModal: ReturnType<typeof CancelReservationModal>;
+    let isLoading: boolean = $state(true)
 
     const isPast = (dateStr: string, slot: string) => {
         const now = new Date()
@@ -40,6 +40,7 @@
         if (!session) {
             goto('/auth');
         }
+        isLoading = false;
     });
 
     $effect(() => {
@@ -49,13 +50,12 @@
     });
 </script>
 
-<NavBar session={session} />
-
 <div class="min-h-screen bg-base-200 py-8 px-4">
     <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl font-bold mb-8 text-center text-base-content">การจองของฉัน</h1>
-        
-        {#if error}
+        {#if isLoading}
+            <LoadingScreen message="กำลังโหลดข้อมูลการจอง..." />
+        {:else if error}
             <div class="alert alert-error shadow-lg">
                 <AlertCircle class="w-6 h-6" />
                 <span>{error}</span>
@@ -83,8 +83,10 @@
                                 method="POST"
                                 action="?/cancel"
                                 use:enhance={() => {
+                                    isLoading = true;
                                     return async ({ update }) => {
                                         await update();
+                                        isLoading = false;
                                     };
                                 }}
                             >

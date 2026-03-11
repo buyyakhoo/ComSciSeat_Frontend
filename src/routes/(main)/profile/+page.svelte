@@ -1,7 +1,5 @@
 <script lang="ts">
-    import '../../app.css';
-    import { Bell, User as UserIcon } from 'lucide-svelte';
-    import NavBar from '$lib/components/web_layout/NavBar.svelte';
+    import { User as UserIcon } from 'lucide-svelte';
     import type { PageData } from './$types';
 
     let { data }: { data: PageData } = $props();
@@ -11,8 +9,6 @@
 <svelte:head>
     <title>โปรไฟล์ - ComSciSeat</title>
 </svelte:head>
-
-<NavBar {session} />
 
 <div class="min-h-screen bg-base-200">
     <div class="container mx-auto px-4 py-8 max-w-md">

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Home, Calendar, Moon, Sun, User, LogOut } from "lucide-svelte";
+    import { Home, Calendar, Moon, Sun, User, LogOut, ShieldUser } from "lucide-svelte";
     import { SignOut } from "@auth/sveltekit/components";
     import { onMount } from "svelte";
     import type { UserStu as UserData } from '$lib/shared/types';
@@ -21,7 +21,6 @@
     }
 </script>
 
-<!-- Navbar -->
 <div class="navbar bg-primary text-primary-content shadow-lg sticky top-0 z-50">
     <div class="navbar-start">
         <!-- Hamburger Menu: Phone/Tablet -->
@@ -34,6 +33,9 @@
             <ul class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="/" class="text-base-content"><Home class="w-4 h-4" />Homepage</a></li>
                 <li><a href="/reservation" class="text-base-content"><Calendar class="w-4 h-4" />My Reservation</a></li>
+                {#if session?.user?.role === 'admin'}    
+                    <li><a href="/admin" class="text-base-content"><ShieldUser class="w-4 h-4" />Admin</a></li>
+                {/if}
             </ul>
         </div>
         
@@ -45,6 +47,9 @@
         <ul class="menu menu-horizontal px-1">
             <li><a href="/" class="active"><Home class="w-4 h-4" />Homepage</a></li>
             <li><a href="/reservation"><Calendar class="w-4 h-4" />My Reservation</a></li>
+            {#if session?.user?.role === 'admin'}
+                <li><a href="/admin"><ShieldUser class="w-4 h-4" />Admin</a></li>
+            {/if}
         </ul>
     </div>
     

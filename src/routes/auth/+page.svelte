@@ -1,5 +1,4 @@
 <script lang="ts">
-  import '../../app.css';
   import { SignIn } from "@auth/sveltekit/components";
   import { page } from "$app/stores";
   import { goto } from '$app/navigation';

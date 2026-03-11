@@ -1,17 +1,32 @@
 <script lang="ts">
-    import '../app.css'
     import { goto } from '$app/navigation';
-    import NavBar from '$lib/components/web_layout/NavBar.svelte';
     import UserCard from '$lib/components/card/UserCard.svelte';
-    import type { LabRoom, BookingStats } from '$lib/shared/types';
+    import type { LabRoom, BookingStats, BookingStatsDescribe } from '$lib/shared/types';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import type { PageData } from './$types';
-    import StatReservedCard from '$lib/components/card/StatReservedCard.svelte';
+    import StatsCard from '$lib/components/card/StatsCard.svelte';
 
     let { data }: { data: PageData } = $props();
     let session = $derived(data.session);
     let labRooms: LabRoom[] = $derived(data.labRooms);
     let bookingStats: BookingStats = $derived(data.bookingStats);
+    let bookingStatsDescribe: BookingStatsDescribe[] = $derived([
+        {
+            title: 'จำนวนการจองตั้งแต่วันนี้',
+            value: bookingStats.userUpcoming,
+            desc: 'รายการ'
+        },
+        {
+            title: 'จำนวนการจองทั้งหมด',
+            value: bookingStats.userTotal,
+            desc: 'รายการ'
+        },
+        {
+            title: 'คุณได้ทำการจอง',
+            value: `${bookingStats.percentage.toFixed(2)}%`,
+            desc: 'ของจำนวนการจองโต๊ะของสมาชิกทั้งหมด'
+        }
+    ])
 </script>
 
 <svelte:head>
@@ -26,11 +41,10 @@
         </div>
     </div>
 {:else}
-    <NavBar {session} />
     <div class="min-h-screen bg-base-200">
         <div class="container mx-auto px-4 py-8 max-w-7xl">    
             <UserCard {session} />
-            <StatReservedCard {bookingStats} />
+            <StatsCard statsDescribe={bookingStatsDescribe} />
             <div class="mb-8">
                 <h3 class="text-xl font-bold mb-4">ห้องแลปคอม</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 justify-items-center">

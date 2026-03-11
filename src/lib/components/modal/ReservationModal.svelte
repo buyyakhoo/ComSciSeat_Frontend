@@ -2,6 +2,7 @@
     import { enhance } from '$app/forms';
     import ModalBox from './ModalBox.svelte';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
+    import LoadingIcon from '../decorate/LoadingIcon.svelte';
 
     let { onReservationSuccess } = $props();
     let dialogElement: HTMLDialogElement;
@@ -12,6 +13,7 @@
     let slot: string = $state('');
     let isReserved: boolean = $state(false);
     let labId: number = $state(0);
+    let isLoading: boolean = $state(false);
 
     export const showModal = (
             tableIdValue: number, 
@@ -70,19 +72,28 @@
                 method="POST"
                 action="?/reserve"
                 use:enhance={() => {
+                    isLoading = true;
                     return async ({ result, update }: { result: any, update: (opts?: any) => Promise<void> }) => {
                         await update({ invalidateAll: false });
                         dialogElement.close();
                         onReservationSuccess?.(result.data);
+                        isLoading = false;
                     };
                 }}
             >
                 <button class="btn btn-ghost" onclick={() => dialogElement.close()}>ย้อนกลับ</button>
                 <input type="hidden" name="table_id" value={tableId} />
+                <input type="hidden" name="table_code" value={tableCode} />
                 <input type="hidden" name="date" value={date} />
                 <input type="hidden" name="slot" value={slot} />
                 <input type="hidden" name="lab_id" value={labId} />
-                <button type="submit" class="btn btn-primary">ยืนยันการจอง</button>
+                <button type="submit" class="btn btn-primary">
+                    {#if isLoading}
+                        <LoadingIcon />
+                    {:else}
+                        ยืนยันการจอง
+                    {/if}
+                </button>
             </form>
         {/snippet}
 

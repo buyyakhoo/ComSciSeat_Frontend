@@ -7,6 +7,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     if (!session) {
         redirect(302, '/auth');
     }
+
     const roomResponse = await fetch(`${BACKEND_API_URL}/api/labs`, {
         method: 'GET',
         headers: { 
@@ -26,6 +27,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     });
     const bookingStatsResponseData = await bookingStatsResponse.json();
     const bookingStats = bookingStatsResponseData.success ? bookingStatsResponseData.data : {};
+    
     return {
         session,
         labRooms,

@@ -1,12 +1,6 @@
 <script lang="ts">
-    import '../../../app.css'
-    import NavBar from '$lib/components/web_layout/NavBar.svelte';
-    import { goto } from '$app/navigation';
-    import { onMount } from 'svelte';
-    import type { PageData } from './$types';
     import Legend from '$lib/components/lab/Legend.svelte';
     import type { LabData, LabHandleSelected } from '$lib/shared/types';
-    import { browser } from '$app/environment';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import ReservationModal from '$lib/components/modal/ReservationModal.svelte';
     import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';
@@ -14,8 +8,7 @@
     import TimeDaySelect from '$lib/components/form_select/TimeDaySelect.svelte';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
     
-    let { data, form } = $props();
-    let session = $derived(data?.session);
+    let { data } = $props();
 
     let labData: LabData = $derived({
         roomId: data.roomId,
@@ -76,9 +69,6 @@
     }
 </script>
 
-<NavBar {session} />
-
-<!-- Content -->
 <div class="min-h-screen bg-base-200 p-4 lg:p-8">
     <div class="container flex flex-col gap-4 mx-auto max-w-6xl">
 
@@ -152,7 +142,7 @@
                                 if (table.is_available) {
                                     reservationModal.showModal(
                                         table.table_id, 
-                                        table.table_code, 
+                                        table.table_code,
                                         labHandleSelected.selectedDate, 
                                         labHandleSelected.selectedTime, 
                                         labHandleSelected.isReserved,
