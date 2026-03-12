@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ScheduleData } from "$lib/shared/types";
+    import type { ScheduleData } from "$lib/shared/types/usermode";
     import HorizontalDay from "./HorizontalDay.svelte";
     
     interface ClassScheduleHorizontalProps {

@@ -2,7 +2,7 @@
     import { Home, Calendar, Moon, Sun, User, LogOut, ShieldUser } from "lucide-svelte";
     import { SignOut } from "@auth/sveltekit/components";
     import { onMount } from "svelte";
-    import type { UserStu as UserData } from '$lib/shared/types';
+    import type { UserStu as UserData } from '$lib/shared/types/usermode';
 
     let { session } = $props<{ session?: { user?: UserData } | null }>();
     let currentTheme: string = $state('light');

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
     import UserCard from '$lib/components/card/UserCard.svelte';
-    import type { LabRoom, BookingStats, BookingStatsDescribe } from '$lib/shared/types';
+    import type { LabRoom, BookingStats, BookingStatsDescribe } from '$lib/shared/types/usermode';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import type { PageData } from './$types';
     import StatsCard from '$lib/components/card/StatsCard.svelte';

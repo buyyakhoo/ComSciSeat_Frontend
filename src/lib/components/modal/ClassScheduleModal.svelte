@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ClassPeriod, ScheduleData } from '$lib/shared/types';
+    import type { ClassPeriod, ScheduleData } from '$lib/shared/types/usermode';
     import ClassScheduleHorizontal from '../schedule/ClassScheduleHorizontal.svelte';
     import ModalBox from './ModalBox.svelte';
 

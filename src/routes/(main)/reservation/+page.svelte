@@ -6,7 +6,7 @@
     import type { PageData } from './$types';
     import Table from '$lib/components/table/Table.svelte';
     import CancelReservationModal from '$lib/components/modal/CancelReservationModal.svelte';
-    import type { ReservedTable } from '$lib/shared/types';
+    import type { ReservedTable } from '$lib/shared/types/usermode';
     import { enhance } from '$app/forms';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
     import LoadingScreen from '$lib/components/decorate/LoadingScreen.svelte';

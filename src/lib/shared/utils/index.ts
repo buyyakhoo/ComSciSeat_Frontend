@@ -10,3 +10,7 @@ export const mapSlotToDurationTime = (slot: string) => {
     }
     return "Error"
 }
+
+export const DAY_NAMES: Record<number, string> = {
+    0: 'อาทิตย์', 1: 'จันทร์', 2: 'อังคาร', 3: 'พุธ', 4: 'พฤหัสบดี', 5: 'ศุกร์', 6: 'เสาร์'
+}

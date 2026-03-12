@@ -1,4 +1,4 @@
-import type { Table, TimeSlot, TableStatus } from '$lib/shared/types';
+import type { Table, TimeSlot, TableStatus } from '$lib/shared/types/usermode';
 
 // Generate time slots from 8:00 AM to 4:00 PM (8 slots)
 export const generateTimeSlots = (): TimeSlot[] => {

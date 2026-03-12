@@ -1,6 +1,6 @@
 <script lang="ts">
     import Legend from '$lib/components/lab/Legend.svelte';
-    import type { LabData, LabHandleSelected } from '$lib/shared/types';
+    import type { LabData, LabHandleSelected } from '$lib/shared/types/usermode.js';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
     import ReservationModal from '$lib/components/modal/ReservationModal.svelte';
     import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';

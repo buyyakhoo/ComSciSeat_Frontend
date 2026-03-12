@@ -2,7 +2,7 @@
     import { Mail, User, LogOut, GraduationCap } from 'lucide-svelte';
     import { SignOut } from "@auth/sveltekit/components";
     import type { Session } from '@auth/sveltekit';
-    import type { UserStu } from '$lib/shared/types';
+    import type { UserStu } from '$lib/shared/types/usermode';
 
     export let session: { 
         user?: UserStu

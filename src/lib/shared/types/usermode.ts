@@ -1,4 +1,3 @@
-// User and Session Types
 export interface UserStu {
     name?: string | null;
     email?: string | null;
