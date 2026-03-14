@@ -12,7 +12,10 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
         ],
         secret: env.AUTH_SECRET,
         trustHost: true,
-        debug: true,
+        session: { 
+            strategy: 'jwt' as const,
+            updateAge: 0
+        },
         callbacks: {
             async signIn({ user, account, profile }: { user: User, account?: any, profile?: any }) {
                 if (!user.email?.endsWith('@kmitl.ac.th')) {
@@ -93,7 +96,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                 session.backendToken = token.backendToken;
                 return {
                     ...session,
-                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString() // Example: 7 days from now
+                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString()
                 };
             }
         },

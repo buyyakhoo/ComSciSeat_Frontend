@@ -6,6 +6,10 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     const session = await locals.auth();
     if (!session?.user) redirect(303, '/auth');
 
+    if (session.user.role !== 'admin') {
+        redirect(303, '/admin/unauthorized');
+    }
+
     const [statsResponse, schedulesResponse, usersResponse, labsResponse, tablesResponse, bookingsResponse] = await Promise.all([
         fetch(`${env.BACKEND_API_URL}/api/admin/booking-stats-admin`, {
             headers: { 

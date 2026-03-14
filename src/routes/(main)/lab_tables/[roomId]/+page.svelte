@@ -7,6 +7,7 @@
     import ClassScheduleModal from '$lib/components/modal/ClassScheduleModal.svelte';
     import TimeDaySelect from '$lib/components/form_select/TimeDaySelect.svelte';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
+    import { CalendarDays, ArrowLeft, Info, AlertTriangle } from 'lucide-svelte';
     
     let { data } = $props();
 
@@ -38,6 +39,7 @@
     }
 
     const checkIsBooking = (selectedDate: string, slotValue: string) => {
+        console.log("Debug: " + JSON.stringify(labData.bookings));
         const isBooking = labData.bookings
                         .some(booking => booking.date === selectedDate && booking.slot === slotValue)
         return isBooking
@@ -79,14 +81,14 @@
 
         {#snippet labTableActionCenter()}
             <button class="btn btn-ghost gap-2" onclick={() => classScheduleModal.showModal(labData.roomId, labData.classPeriods)}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2v4M16 2v4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 10h18M9 10v12M15 10v12M3 14h18M3 18h18" /></svg>
+                <CalendarDays class="h-5 w-5" />
                 Classroom Schedule
             </button>
         {/snippet}
 
         {#snippet labTableActionEnd()}
             <a href="/" class="btn btn-ghost gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                <ArrowLeft class="h-5 w-5" />
                 Back to Labs
             </a>
         {/snippet}
@@ -111,7 +113,7 @@
 
         {#if !isClicked}
             <div class="alert alert-info shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <Info class="stroke-current shrink-0 w-6 h-6" />
                 <span>กรุณาเลือกวันที่และเวลาที่ต้องการจอง</span>
             </div>
         {:else if isLoading}
@@ -120,12 +122,12 @@
             </div>
         {:else if labHandleSelected.tables.length === 0 && labHandleSelected.status === 'CLOSED'}
             <div class="alert alert-error shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <AlertTriangle class="stroke-current shrink-0 w-6 h-6" />
                 <span>{labHandleSelected.statusDescribe}</span>
             </div>
         {:else if labHandleSelected.tables.length === 0 && labHandleSelected.status === 'OPENED'}
             <div class="alert alert-info shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <Info class="stroke-current shrink-0 w-6 h-6" />
                 <span>ไม่มีโต๊ะในห้องนี้</span>
             </div>
         {:else}

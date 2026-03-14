@@ -14,13 +14,10 @@
 
     const getGridClasses = (slot: string) => {
         if (slot === "Morning") {
-            // 09:00 - 12:00
             return "col-start-1 col-span-3 bg-secondary text-white";
         } else if (slot === "Lunch") {
-            // 12:00 - 13:00
             return "col-start-4 col-span-1 bg-secondary text-white";
         } else if (slot === "Afternoon") {
-            // 13:00 - 16:00
             return "col-start-5 col-span-3 bg-secondary text-white";
         }
         return "hidden";

@@ -81,7 +81,7 @@
                     };
                 }}
             >
-                <button class="btn btn-ghost" onclick={() => dialogElement.close()}>ย้อนกลับ</button>
+                <button type="button" class="btn btn-ghost" onclick={() => dialogElement.close()}>ย้อนกลับ</button>
                 <input type="hidden" name="table_id" value={tableId} />
                 <input type="hidden" name="table_code" value={tableCode} />
                 <input type="hidden" name="date" value={date} />

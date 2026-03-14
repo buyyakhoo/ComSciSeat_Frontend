@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { User as UserIcon } from 'lucide-svelte';
+    import { User as UserIcon, BadgeCheck, ArrowLeft } from 'lucide-svelte';
     import type { PageData } from './$types';
 
     let { data }: { data: PageData } = $props();
@@ -59,9 +59,7 @@
                         </label>
                         <div class="flex items-center">
                             <div class="badge bg-[var(--color-accent-qss)] text-white badge-lg gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                                </svg>
+                                <BadgeCheck class="inline-block w-4 h-4 stroke-current" />
                                 {session?.user?.role}
                             </div>
                         </div>
@@ -72,9 +70,7 @@
 
         <div class="mt-6 flex justify-center">
             <a href="/" class="btn btn-ghost gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
+                <ArrowLeft class="h-5 w-5" />
                 กลับสู่หน้าหลัก
             </a>
         </div>

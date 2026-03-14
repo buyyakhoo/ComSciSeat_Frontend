@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { Home, Calendar, Moon, Sun, User, LogOut, ShieldUser } from "lucide-svelte";
+    import { Home, Calendar, Moon, Sun, User, LogOut, ShieldUser, Menu } from "lucide-svelte";
     import { SignOut } from "@auth/sveltekit/components";
     import { onMount } from "svelte";
     import type { UserStu as UserData } from '$lib/shared/types/usermode';
-
+    
     let { session } = $props<{ session?: { user?: UserData } | null }>();
     let currentTheme: string = $state('light');
     
@@ -26,9 +26,7 @@
         <!-- Hamburger Menu: Phone/Tablet -->
         <div class="dropdown lg:hidden">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
+                <Menu class="h-5 w-5" />
             </div>
             <ul class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="/" class="text-base-content"><Home class="w-4 h-4" />Homepage</a></li>

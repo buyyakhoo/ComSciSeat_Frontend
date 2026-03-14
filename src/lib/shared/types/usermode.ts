@@ -71,7 +71,6 @@ export interface ScheduleData {
     classPeriods: ClassPeriod[];
 }
 
-// Auth Types
 export interface AuthCallbacks {
     signIn: (params: { user: UserStu; account?: any; profile?: any }) => Promise<boolean>;
     session: (params: { session: Record<string, any>; token: any }) => Promise<Session>;

@@ -4,6 +4,7 @@
     import Table from '../table/Table.svelte'
     import { mapSlotToDurationTime } from '$lib/shared/utils'
     import AddBookingModal from '../modal/AddBookingModal.svelte'
+  import AdminCardHeader from '../card/AdminCardHeader.svelte';
 
     let { bookings, labs, tables } = $props()
 
@@ -23,16 +24,13 @@
     let addBookingModal: ReturnType<typeof AddBookingModal> = $state(null as any)
 </script>
 
-<div class="mb-6 flex justify-between items-center">
-    <div>
-        <h1 class="text-2xl font-bold">จัดการการจอง</h1>
-        <p class="text-base-content/50 text-sm mt-1">ดูและยกเลิกการจองทั้งหมด</p>
-    </div>
-    <div class="badge badge-outline">{bookings.length} รายการ</div>
-    <button class="btn btn-primary btn-sm" onclick={() => addBookingModal.showModal()}>
-        + เพิ่มการจอง
-    </button>
-</div>
+<AdminCardHeader
+    title="จัดการการจอง"
+    describe="ดูและยกเลิกการจองทั้งหมด"
+    count={bookings.length}
+    btnDetail="+ เพิ่มการจอง"
+    onButton={() => addBookingModal.showModal()}
+/>
 
 <div class="card bg-base-100 border border-base-300">
     <div class="card-body p-4">

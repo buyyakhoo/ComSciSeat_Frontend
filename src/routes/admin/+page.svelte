@@ -6,6 +6,7 @@
     import TablesTab from "$lib/components/admin_tab/TablesTab.svelte";
     import LabsTab from "$lib/components/admin_tab/LabsTab.svelte";
     import BookingsTab from "$lib/components/admin_tab/BookingsTab.svelte";
+    import { LayoutDashboard, CalendarDays, Building2, Table, BookOpen, Users, LogOut } from 'lucide-svelte';
 
     let { data } = $props();
     let activeTab: string = $state('dashboard');
@@ -26,12 +27,12 @@
     ])
 
     const navItems = [
-        { id: 'dashboard', label: 'Dashboard', icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z' },
-        { id: 'bookings', label: 'การจอง', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-        { id: 'labs', label: 'ห้องแลป', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
-        { id: 'tables', label: 'โต๊ะ', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
-        { id: 'schedule', label: 'ตารางเรียน', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-        { id: 'users', label: 'ผู้ใช้งาน', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
+        { id: 'dashboard', label: 'Dashboard',   icon: LayoutDashboard },
+        { id: 'bookings',  label: 'การจอง',      icon: CalendarDays },
+        { id: 'labs',      label: 'ห้องแลป',     icon: Building2 },
+        { id: 'tables',    label: 'โต๊ะ',        icon: Table },
+        { id: 'schedule',  label: 'ตารางเรียน',  icon: BookOpen },
+        { id: 'users',     label: 'ผู้ใช้งาน',   icon: Users },
     ]
 </script>
 
@@ -86,9 +87,7 @@
                         onclick={() => activeTab = item.id}
                         class="btn btn-ghost btn-sm justify-start gap-3 font-normal rounded-lg"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={item.icon}/>
-                        </svg>
+                        <item.icon class="h-4 w-4" />
                         {item.label}
                     </button>
                 {/each}
@@ -96,9 +95,7 @@
 
             <div class="p-3 border-t border-base-300">
                 <a href="/" class="btn btn-ghost btn-sm justify-start gap-3 font-normal w-full text-error">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
+                    <LogOut class="h-4 w-4" />
                     ออกจากหน้า Admin
                 </a>
             </div>
