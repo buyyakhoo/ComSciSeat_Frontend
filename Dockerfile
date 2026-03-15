@@ -1,30 +1,21 @@
-FROM node:22-alpine
-
-# set working directory
+FROM node:lts AS prebuilt
 WORKDIR /app
-
-# Copy package files first to leverage Docker cache mechanisms
-COPY package.json .
 COPY package-lock.json .
-
-# Install dependencies
+COPY package.json .
 RUN npm install
 
-# Copy the rest of the application
-COPY . .
-
-# Catch the argument passed from docker-compose.yaml
-ARG VITE_BACKEND_API_URL
-
-# Set it as an environment variable so Vite can read it during the build
-ENV VITE_BACKEND_API_URL=$VITE_BACKEND_API_URL
-
-# Build the SvelteKit app
+FROM prebuilt AS builder
+WORKDIR /app
+COPY src/ src/
+COPY tsconfig.json .
+COPY svelte.config.js .
+COPY vite.config.ts .
 RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 4173
-
-# Define the command to run the app
-# CMD ["npm", "run", "preview"]
-CMD ["node", "build"]
+FROM node:lts AS final
+WORKDIR /app
+COPY --from=builder /app/build/ build/
+COPY package-lock.json .
+COPY package.json .
+RUN npm install --production
+CMD ["npm", "run", "start"]

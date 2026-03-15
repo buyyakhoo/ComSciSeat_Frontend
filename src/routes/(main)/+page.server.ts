@@ -1,6 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { BACKEND_API_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async ({ locals, fetch }) => {
     const session = await locals.auth();
@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
         redirect(302, '/auth');
     }
 
-    const roomResponse = await fetch(`${BACKEND_API_URL}/api/labs`, {
+    const roomResponse = await fetch(`${env.BACKEND_API_URL}/api/labs`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     const roomResponseData = await roomResponse.json();
     const labRooms = roomResponseData.success ? roomResponseData.data : [];
 
-    const bookingStatsResponse = await fetch(`${BACKEND_API_URL}/api/reservations/booking-stats`, {
+    const bookingStatsResponse = await fetch(`${env.BACKEND_API_URL}/api/reservations/booking-stats`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

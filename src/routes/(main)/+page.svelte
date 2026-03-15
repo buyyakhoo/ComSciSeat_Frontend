@@ -23,7 +23,7 @@
         },
         {
             title: 'คุณได้ทำการจอง',
-            value: `${bookingStats.percentage.toFixed(2)}%`,
+            value: `${(bookingStats.percentage ?? 0).toFixed(2)}%`,
             desc: 'ของจำนวนการจองโต๊ะของสมาชิกทั้งหมด'
         }
     ])
