@@ -38,12 +38,11 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                             image: user.image
                         })
                     });
-
-                    const data = await response.json();
                     if (!response.ok) {
-                        console.error('Backend error:', data);
+                        console.error('Backend error:', response.status, response.statusText);
                         return false;
                     }
+                    const data = await response.json();
                     if (!data.success) {
                         console.error('Verification failed:', data.error);
                         return false;
@@ -74,9 +73,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
                         },
                         body: JSON.stringify({ email: session.user.email })
                     });
-                    const data = await response.json();
-                    if (data.token) {
-                        token.backendToken = data.token;
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.token) {
+                            token.backendToken = data.token;
+                        }
+                    } else {
+                        console.error('Failed to get token:', response.status, response.statusText);
                     }
                 }
                 if (token.backendToken) {
