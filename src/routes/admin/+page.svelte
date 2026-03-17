@@ -18,7 +18,7 @@
     let schedules = $derived(data.schedules ?? [])
 
     let stats = $derived([
-        { label: 'การจองทั้งหมด', value: adminStats.allBookings ?? 0, sub: '%', color: 'text-success' },
+        { label: 'การจองทั้งหมด', value: adminStats.allBookings ?? 0, sub: 'โต๊ะ', color: 'text-success' },
         { label: 'การจองวันนี้', value: adminStats.bookingsToday ?? 0, sub: 'โต๊ะ', color: 'text-primary' },
         { label: 'การจองเมื่อวาน', value: adminStats.bookingsYesterday ?? 0, sub: 'โต๊ะ', color: 'text-primary' },
         { label: 'ห้องแลป', value: adminStats.totalLabs ?? 0, sub: 'โต๊ะ', color: 'text-success' },
