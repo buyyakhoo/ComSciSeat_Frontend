@@ -1,24 +1,21 @@
 <script lang="ts">
-  import { SignIn } from "@auth/sveltekit/components";
   import { page } from "$app/stores";
-  import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
   import { LogIn } from 'lucide-svelte';
-  
+
+  export let form: { error?: string } | undefined;
+
   let errorMessage: string = '';
-  
-  // ตรวจสอบ session เมื่อโหลดหน้า
-  onMount(() => {
-    if ($page.data.session) {
-      goto('/'); // redirect ถ้ามี session แล้ว
-    }
-    
-    // ตรวจสอบ error จาก URL parameters
+
+  $: {
     const error = $page.url.searchParams.get('error');
-    if (error === 'AccessDenied') {
-      errorMessage = 'กรุณาใช้ email @kmitl.ac.th เท่านั้น';
+    if (error) {
+      errorMessage = error === 'no_code'
+        ? 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ โปรดลองใหม่'
+        : 'กรุณาใช้ email @kmitl.ac.th เท่านั้น';
+    } else if (form?.error) {
+      errorMessage = form.error;
     }
-  });
+  }
 </script>
 
 <svelte:head>
@@ -44,22 +41,13 @@
       {/if}
       
       <!-- Check if already signed in -->
-      {#if $page.data.session}
-        <div class="alert alert-success mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>เข้าสู่ระบบแล้ว กำลังนำไปหน้าหลัก...</span>
-        </div>
-      {:else}
-        <!-- Google OAuth Button -->
-        <SignIn provider="google">
-          <div slot="submitButton" class="btn btn-primary btn-lg w-full shadow-lg">
-            <LogIn class="w-6 h-6" />
-            เข้าสู่ระบบด้วย Google
-          </div>
-        </SignIn>
-      {/if}
+      <!-- Google OAuth Button -->
+      <form method="POST" class="w-full">
+        <button type="submit" class="btn btn-primary btn-lg w-full shadow-lg">
+          <LogIn class="w-6 h-6" />
+          เข้าสู่ระบบด้วย Google
+        </button>
+      </form>
       
       <div class="text-xs text-base-content/50 mt-6">
         <p>© 2026 Science Faculty, KMITL</p>

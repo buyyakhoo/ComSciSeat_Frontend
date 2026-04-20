@@ -8,17 +8,7 @@ services:
     ports:
       - "4173:4173"
     environment:
-      - AUTH_GOOGLE_ID=${AUTH_GOOGLE_ID}
-      - AUTH_GOOGLE_SECRET=${AUTH_GOOGLE_SECRET}
-      - AUTH_SECRET=${AUTH_SECRET}
       - BACKEND_API_URL=${BACKEND_API_URL}
-      - AUTH_TRUST_HOST=${AUTH_TRUST_HOST}
-      - AUTH_COOKIE_SECURE=${AUTH_COOKIE_SECURE}
-      - INTERNAL_SECRET=${INTERNAL_SECRET}
-      - PORT=4173
-      - ORIGIN=http://localhost:4173
-      - PROTOCOL_HEADER=x-forwarded-proto
-      - HOST_HEADER=x-forwarded-host
     networks:
       - appnet
 

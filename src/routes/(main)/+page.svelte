@@ -3,11 +3,10 @@
     import UserCard from '$lib/components/card/UserCard.svelte';
     import type { LabRoom, BookingStats, BookingStatsDescribe } from '$lib/shared/types/usermode';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
-    import type { PageData } from './$types';
     import StatsCard from '$lib/components/card/StatsCard.svelte';
 
-    let { data }: { data: PageData } = $props();
-    let session = $derived(data.session);
+    let { data }: { data: { user: any; labRooms: LabRoom[]; bookingStats: BookingStats } } = $props();
+    let user = $derived(data.user);
     let labRooms: LabRoom[] = $derived(data.labRooms);
     let bookingStats: BookingStats = $derived(data.bookingStats);
     let bookingStatsDescribe: BookingStatsDescribe[] = $derived([
@@ -33,7 +32,7 @@
     <title>หน้าแรก - ComSciSeat</title>
 </svelte:head>
 
-{#if !session}
+{#if !user}
     <div class="min-h-screen flex items-center justify-center bg-base-200">
         <div class="text-center">
             <div class="loading loading-spinner loading-lg mb-4"></div>
@@ -42,8 +41,8 @@
     </div>
 {:else}
     <div class="min-h-screen bg-base-200">
-        <div class="container mx-auto px-4 py-8 max-w-7xl">    
-            <UserCard {session} />
+        <div class="container mx-auto px-4 py-8 max-w-7xl">
+            <UserCard {user} />
             <StatsCard statsDescribe={bookingStatsDescribe} />
             <div class="mb-8">
                 <h3 class="text-xl font-bold mb-4">ห้องแลปคอม</h3>

@@ -8,6 +8,26 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
         redirect(302, '/auth');
     }
 
+    let user = session.user;
+
+    const userDataResponse = await fetch(`${env.BACKEND_API_URL}/api/user/${session.user.student_id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.backendToken}`
+        }
+    });
+    if (userDataResponse.ok) {
+        const userData = await userDataResponse.json();
+        if (userData.success && userData.user_type) {
+            user = {
+                ...user,
+                name: userData.name,
+                image: userData.image
+            };
+        }
+    }
+
     const roomResponse = await fetch(`${env.BACKEND_API_URL}/api/labs`, {
         method: 'GET',
         headers: { 
@@ -30,16 +50,23 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
             'Authorization': `Bearer ${session.backendToken}`
         }
     });
-    let bookingStats = {};
+    let bookingStats = {
+        userUpcoming: 0,
+        userTotal: 0,
+        allTotal: 0,
+        percentage: 0
+    };
     if (bookingStatsResponse.ok) {
         const bookingStatsResponseData = await bookingStatsResponse.json();
-        bookingStats = bookingStatsResponseData.success ? bookingStatsResponseData.data : {};
+        if (bookingStatsResponseData.success) {
+            bookingStats = bookingStatsResponseData.data;
+        }
     } else {
         console.error('Failed to fetch booking stats:', bookingStatsResponse.status, bookingStatsResponse.statusText);
     }
     
     return {
-        session,
+        user: session.user,
         labRooms,
         bookingStats
     }
