@@ -25,11 +25,13 @@
 
     let scheduleData: ScheduleData = $state({
         roomId: 0,
+        roomCode: '',
         classPeriods: []
     });
 
-    export const showModal = (roomId: number, classPeriod: ClassPeriod[]) => {
+    export const showModal = (roomId: number, roomCode: string, classPeriod: ClassPeriod[]) => {
         scheduleData.roomId = roomId;
+        scheduleData.roomCode = roomCode;
         scheduleData.classPeriods = classPeriod;
         dialogElement.showModal();
     }
@@ -44,7 +46,7 @@
 
     {#snippet modalBoxHeader()}
         <h3 class="text-2xl font-bold text-primary mb-4">
-            ตารางเรียนของห้องปฏิบัติการ {scheduleData.roomId}
+            ตารางเรียนของห้องปฏิบัติการ {scheduleData.roomCode}
         </h3>
     {/snippet}
 

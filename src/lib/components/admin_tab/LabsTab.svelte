@@ -26,11 +26,13 @@
         <div class="overflow-x-auto">
             {#snippet labHeader()}
                 <th>ชื่อห้อง</th>
+                <th>รหัสห้อง</th>
                 <th>จัดการ</th>
             {/snippet}
 
             {#snippet labRow(lab: any)}
                 <td class="font-mono font-bold">{lab.lab_name}</td>
+                <td class="font-mono text-sm">{lab.lab_code || '-'}</td>
                 <td>
                     <form method="POST" action="?/deleteLab"
                         use:enhance={() => {

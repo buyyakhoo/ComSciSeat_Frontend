@@ -52,7 +52,7 @@
 
 <div class="min-h-screen bg-base-200 py-8 px-4">
     <div class="max-w-6xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8 text-center text-base-content">การจองของฉัน</h1>
+        <h1 class="text-3xl font-bold mb-8 text-center text-base-content">รายการการจอง</h1>
         {#if isLoading}
             <LoadingScreen message="กำลังโหลดข้อมูลการจอง..." />
         {:else if error}

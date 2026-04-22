@@ -2,7 +2,7 @@
 
     interface RoomButtonProps {
         allowed: boolean;
-        code: string;
+        code?: string;
         describe?: string;
         allowedDisplay?: string;
         notAllowedDisplay?: string;
@@ -18,8 +18,10 @@
                 {allowed ? 'bg-primary text-primary-content hover:scale-105 transition-transform duration-200' : 'bg-error opacity-50'}
     "
 >
-    <div class="card-body p-3 text-center">
-        <div class="text-lg font-bold">#{code}</div>
+    <div class="card-body p-3 text-center h-20">
+        {#if code}
+            <div class="text-lg font-bold">#{code}</div>
+        {/if}
         {#if describe}
             <div class="text-xs">{describe}</div>
         {/if}

@@ -6,11 +6,11 @@
     let { labs } = $props()
 
     let dialogElement: HTMLDialogElement
-    let newLab = $state({ lab_name: '' })
+    let newLab = $state({ lab_name: '', lab_code: '' })
     let addError = $state('')
 
     export const showModal = () => {
-        newLab = { lab_name: '' }
+        newLab = { lab_name: '', lab_code: '' }
         addError = ''
         dialogElement.showModal()
     }
@@ -60,6 +60,13 @@
                     placeholder="ชื่อห้องแลป เช่น Lab 1"
                     class="input input-bordered input-sm w-full"
                     bind:value={newLab.lab_name}
+                />
+                <input
+                    type="text"
+                    name="lab_code"
+                    placeholder="รหัสห้องแลป เช่น L001"
+                    class="input input-bordered input-sm w-full"
+                    bind:value={newLab.lab_code}
                 />
             </div>
         </form>

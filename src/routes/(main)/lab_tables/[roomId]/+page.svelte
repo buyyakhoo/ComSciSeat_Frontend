@@ -13,6 +13,7 @@
 
     let labData: LabData = $derived({
         roomId: data.roomId,
+        roomCode: data.roomCode,
         bookings: data.bookings,
         classPeriods: data.classPeriods,
     });
@@ -75,12 +76,12 @@
     <div class="container flex flex-col gap-4 mx-auto max-w-6xl">
 
         {#snippet labTableHeader()}
-            <h1 class="text-3xl font-bold">Lab Room {labData.roomId}</h1>
+            <h1 class="text-3xl font-bold">Lab Room {labData.roomCode}</h1>
             <p class="text-base-content/60">Live Seating Arrangement</p>
         {/snippet}
 
         {#snippet labTableActionCenter()}
-            <button class="btn btn-ghost gap-2" onclick={() => classScheduleModal.showModal(labData.roomId, labData.classPeriods)}>
+            <button class="btn btn-ghost gap-2" onclick={() => classScheduleModal.showModal(labData.roomId, labData.roomCode, labData.classPeriods)}>
                 <CalendarDays class="h-5 w-5" />
                 Classroom Schedule
             </button>

@@ -30,7 +30,7 @@
             </div>
             <ul class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="/" class="text-base-content"><Home class="w-4 h-4" />Homepage</a></li>
-                <li><a href="/reservation" class="text-base-content"><Calendar class="w-4 h-4" />My Reservation</a></li>
+                <li><a href="/reservation" class="text-base-content"><Calendar class="w-4 h-4" />Reservation</a></li>
                 {#if session?.user?.role === 'admin'}    
                     <li><a href="/admin" class="text-base-content"><ShieldUser class="w-4 h-4" />Admin</a></li>
                 {/if}
@@ -44,7 +44,7 @@
     <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
             <li><a href="/" class="active"><Home class="w-4 h-4" />Homepage</a></li>
-            <li><a href="/reservation"><Calendar class="w-4 h-4" />My Reservation</a></li>
+            <li><a href="/reservation"><Calendar class="w-4 h-4" />Reservation</a></li>
             {#if session?.user?.role === 'admin'}
                 <li><a href="/admin"><ShieldUser class="w-4 h-4" />Admin</a></li>
             {/if}

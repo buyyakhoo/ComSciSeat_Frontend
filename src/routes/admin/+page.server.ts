@@ -115,8 +115,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'เพิ่มไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'เพิ่มตารางเรียนสำเร็จ' }
@@ -138,8 +142,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'ลบไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'ลบไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'ลบไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'ลบตารางเรียนสำเร็จ' }
@@ -162,8 +170,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'เพิ่มไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'เพิ่มโต๊ะสำเร็จ' }
@@ -184,8 +196,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'ลบไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'ลบไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'ลบไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'ลบโต๊ะสำเร็จ' }
@@ -196,6 +212,7 @@ export const actions: Actions = {
 
         const formData = await request.formData()
         const lab_name = formData.get('lab_name')
+        const lab_code = formData.get('lab_code')
 
         const response = await fetch(`${env.BACKEND_API_URL}/api/admin/add_lab`, {
             method: 'POST',
@@ -203,12 +220,16 @@ export const actions: Actions = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${session.backendToken}`
             },
-            body: JSON.stringify({ lab_name })
+            body: JSON.stringify({ lab_name, lab_code })
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'เพิ่มไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'เพิ่มห้องแลปสำเร็จ' }
@@ -230,8 +251,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'ลบไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'ลบไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'ลบไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'ลบห้องแลปสำเร็จ' }
@@ -252,8 +277,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'ยกเลิกไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'ยกเลิกไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'ยกเลิกไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'ยกเลิกการจองสำเร็จ' }
@@ -278,8 +307,12 @@ export const actions: Actions = {
         })
 
         if (!response.ok) {
-            const result = await response.json()
-            return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            try {
+                const result = await response.json()
+                return { success: false, message: result.error ?? 'เพิ่มไม่สำเร็จ' }
+            } catch {
+                return { success: false, message: 'เพิ่มไม่สำเร็จ' }
+            }
         }
 
         return { success: true, message: 'เพิ่มการจองสำเร็จ' }

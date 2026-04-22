@@ -50,7 +50,7 @@
                     {#each labRooms as labRoom}
                         <RoomButton 
                             allowed={true}
-                            code={labRoom.lab_id.toString()}
+                            code={labRoom.lab_code}
                             describe={labRoom.lab_name}
                             onButton={() => {
                                 goto(`/lab_tables/${labRoom.lab_id}`);

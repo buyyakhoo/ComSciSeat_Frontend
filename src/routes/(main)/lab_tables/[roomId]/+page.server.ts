@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
     const roomId = Number.parseInt(params.roomId || '0');
     const backendToken = session.backendToken;
 
-    const [bookingRes, classScheduleRes] = await Promise.all([
+    const [bookingRes, classScheduleRes, labsRes] = await Promise.all([
         fetch(`${env.BACKEND_API_URL}/api/reservations/my-bookings`, {
             method: 'GET',
             headers: {
@@ -22,7 +22,15 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
 
         fetch(`${env.BACKEND_API_URL}/api/labs/${roomId}/class_schedule`, {
             method: 'GET',
-            headers: { 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${backendToken}`
+            }
+        }),
+
+        fetch(`${env.BACKEND_API_URL}/api/labs`, {
+            method: 'GET',
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${backendToken}`
             }
@@ -51,9 +59,19 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
         classPeriods = classData.data ?? [];
     }
 
+    let roomCode = '';
+    if (labsRes.ok) {
+        const labsData = await labsRes.json();
+        const lab = labsData.data?.find((l: any) => l.lab_id === roomId);
+        roomCode = lab?.lab_code ?? '';
+    } else {
+        console.error('Lab API Error:', labsRes.status);
+    }
+
     return {
         session,
         roomId,
+        roomCode,
         bookings,
         classPeriods
     }

@@ -14,6 +14,7 @@ export interface Session {
 export interface LabRoom {
     lab_id: number;
     lab_name: string;
+    lab_code: string;
 }
 
 export interface BookingStats {
@@ -31,6 +32,7 @@ export interface BookingStatsDescribe {
 
 export interface LabData {
     roomId: number;
+    roomCode: string;
     bookings: ReservedTable[]
     classPeriods: ClassPeriod[];
 }
@@ -68,6 +70,7 @@ export interface ClassPeriod {
 
 export interface ScheduleData {
     roomId: number | undefined;
+    roomCode: string;
     classPeriods: ClassPeriod[];
 }
 
