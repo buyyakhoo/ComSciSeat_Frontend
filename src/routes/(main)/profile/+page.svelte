@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { User as UserIcon, BadgeCheck, ArrowLeft } from 'lucide-svelte';
+    import { BadgeCheck, ArrowLeft } from 'lucide-svelte';
     import type { PageData } from './$types';
 
     let { data }: { data: PageData } = $props();
-    let session = $derived(data.session);
+    let user = $derived(data.user);
+    const fallbackImage = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face';
 </script>
 
 <svelte:head>
@@ -17,13 +18,7 @@
                 <div class="flex justify-center mb-6">
                     <div class="avatar online placeholder">
                         <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                            {#if session?.user?.image}
-                                <img src={session.user.image} alt="Profile" />
-                            {:else}
-                                <div class="bg-neutral text-neutral-content w-full h-full flex items-center justify-center">
-                                    <UserIcon class="w-12 h-12" />
-                                </div>
-                            {/if}
+                            <img src={user?.image || fallbackImage} alt="Profile" />
                         </div>
                     </div>
                 </div>
@@ -34,7 +29,7 @@
                             <span class="label-text font-semibold">Name</span>
                         </label>
                         <div class="input input-bordered flex items-center bg-base-200">
-                            <span class="font-medium">{session?.user?.name}</span>
+                            <span class="font-medium">{user?.name}</span>
                         </div>
                     </div>
                     <div class="form-control w-full">
@@ -42,7 +37,7 @@
                             <span class="label-text font-semibold">ID</span>
                         </label>
                         <div class="input input-bordered flex items-center bg-base-200">
-                            <span class="font-medium">{session?.user?.student_id}</span>
+                            <span class="font-medium">{user?.student_id}</span>
                         </div>
                     </div>
                     <div class="form-control w-full">
@@ -50,7 +45,7 @@
                             <span class="label-text font-semibold">E-Mail</span>
                         </label>
                         <div class="input input-bordered flex items-center bg-base-200">
-                            <span class="font-medium">{session?.user?.email}</span>
+                            <span class="font-medium">{user?.email}</span>
                         </div>
                     </div>
                     <div class="form-control w-full">
@@ -60,7 +55,7 @@
                         <div class="flex items-center">
                             <div class="badge bg-[var(--color-accent-qss)] text-white badge-lg gap-2">
                                 <BadgeCheck class="inline-block w-4 h-4 stroke-current" />
-                                {session?.user?.role}
+                                {user?.role}
                             </div>
                         </div>
                     </div>

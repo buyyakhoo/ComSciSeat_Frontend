@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit'
 import { env } from '$env/dynamic/private'
-import { setAuthCookie } from '../../../auth'
+import { setAuthCookie, setProfileImageCookie } from '../../../auth'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
@@ -39,6 +39,11 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
         }
 
         setAuthCookie({ cookies }, data.token)
+        const profileImage = data.user?.picture ?? data.user?.image
+        if (profileImage) {
+            setProfileImageCookie({ cookies }, profileImage)
+        }
+
         throw redirect(303, '/')
     } catch (error) {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error'

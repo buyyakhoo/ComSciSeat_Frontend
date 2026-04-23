@@ -8,25 +8,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
         redirect(302, '/auth');
     }
 
-    let user = session.user;
-
-    const userDataResponse = await fetch(`${env.BACKEND_API_URL}/api/user/${session.user.student_id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.backendToken}`
-        }
-    });
-    if (userDataResponse.ok) {
-        const userData = await userDataResponse.json();
-        if (userData.success && userData.user_type) {
-            user = {
-                ...user,
-                name: userData.name,
-                image: userData.image
-            };
-        }
-    }
+    const user = session.user;
 
     const roomResponse = await fetch(`${env.BACKEND_API_URL}/api/labs`, {
         method: 'GET',
@@ -66,7 +48,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     }
     
     return {
-        user: session.user,
+        user,
         labRooms,
         bookingStats
     }

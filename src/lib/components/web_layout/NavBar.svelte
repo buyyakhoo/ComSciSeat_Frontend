@@ -6,6 +6,7 @@
     
     let { session } = $props<{ session?: { user?: UserData } | null }>();
     let currentTheme: string = $state('light');
+    let user = $derived(session?.user);
     
     onMount(() => {
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -31,7 +32,7 @@
             <ul class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-base-100 rounded-box w-52">
                 <li><a href="/" class="text-base-content"><Home class="w-4 h-4" />Homepage</a></li>
                 <li><a href="/reservation" class="text-base-content"><Calendar class="w-4 h-4" />Reservation</a></li>
-                {#if session?.user?.role === 'admin'}    
+                {#if user?.role === 'admin'}
                     <li><a href="/admin" class="text-base-content"><ShieldUser class="w-4 h-4" />Admin</a></li>
                 {/if}
             </ul>
@@ -45,7 +46,7 @@
         <ul class="menu menu-horizontal px-1">
             <li><a href="/" class="active"><Home class="w-4 h-4" />Homepage</a></li>
             <li><a href="/reservation"><Calendar class="w-4 h-4" />Reservation</a></li>
-            {#if session?.user?.role === 'admin'}
+            {#if user?.role === 'admin'}
                 <li><a href="/admin"><ShieldUser class="w-4 h-4" />Admin</a></li>
             {/if}
         </ul>
@@ -56,17 +57,17 @@
             {#if currentTheme === 'light'}<Moon class="w-5 h-5" />{:else}<Sun class="w-5 h-5" />{/if}
         </button>
         
-        {#if session?.user}
+        {#if user}
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
-                        <img alt="Profile" src={session.user?.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"} />
+                        <img alt="Profile" src={user.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"} />
                     </div>
                 </div>
                 <ul class="mt-3 z-50 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 gap-2">
                     <li class="menu-title">
-                        <span class="text-base-content">{session.user?.name || 'ผู้ใช้'}</span>
-                        <span class="text-xs opacity-60">{session.user?.role || 'นักศึกษา'}</span>
+                        <span class="text-base-content">{user.name || 'ผู้ใช้'}</span>
+                        <span class="text-xs opacity-60">{user.role || 'นักศึกษา'}</span>
                     </li>
                     <li><a href="/profile" class="text-base-content"><User class="w-4 h-4" />Profile</a></li>
                     <li>

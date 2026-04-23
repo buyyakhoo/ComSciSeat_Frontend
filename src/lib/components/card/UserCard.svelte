@@ -3,6 +3,7 @@
     import type { UserStu } from '$lib/shared/types/usermode';
 
     export let user: UserStu | undefined;
+    const fallbackImage = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face';
 </script>
 
 <div class="card bg-base-100 shadow-lg mb-4 sm:mb-6">
@@ -11,7 +12,7 @@
             <div class="flex flex-col lg:flex-row items-center lg:items-start gap-4 text-center lg:text-left w-full lg:w-auto">
                 <div class="avatar shrink-0">
                     <div class="w-24 sm:w-20 lg:w-16 xl:w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                        <img src={user?.image} alt="User avatar" />
+                        <img src={user?.image || fallbackImage} alt="User avatar" />
                     </div>
                 </div>
                 <div class="flex flex-col items-center lg:items-start w-full">
