@@ -4,66 +4,67 @@ import { env } from "$env/dynamic/private";
 
 export const load: PageServerLoad = async ({ locals, fetch }) => {
     const session = await locals.auth();
-    if (!session?.user) redirect(303, '/auth');
-
-    if (session.user.role !== 'admin') {
-        redirect(303, '/admin/unauthorized');
+    if (!session?.user) {
+        throw redirect(303, '/auth');
     }
 
-    const [statsResponse, schedulesResponse, usersResponse, labsResponse, tablesResponse, bookingsResponse] = await Promise.all([
-        fetch(`${env.BACKEND_API_URL}/api/admin/booking-stats-admin`, {
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.backendToken}` 
-            }
-        }),
-        fetch(`${env.BACKEND_API_URL}/api/admin/class_schedule`, {
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.backendToken}` 
-            }
-        }),
-        fetch(`${env.BACKEND_API_URL}/api/admin/users`, {
-            headers: {
-                'Content-Type': 'application/json', 
-                'Authorization': `Bearer ${session.backendToken}` 
-            }
-        }),
-        fetch(`${env.BACKEND_API_URL}/api/admin/labs`, {
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.backendToken}` 
-            }
-        }),
-        fetch(`${env.BACKEND_API_URL}/api/admin/tables`, {
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.backendToken}` 
-            }
-        }),
-        fetch(`${env.BACKEND_API_URL}/api/admin/bookings`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.backendToken}`
+    if (session.user.role !== 'admin') {
+        throw redirect(303, '/admin/unauthorized');
+    }
+
+    const authHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.backendToken}`
+    };
+
+    const endpoints = [
+        { key: 'adminStats', url: `${env.BACKEND_API_URL}/api/admin/booking-stats-admin`, fallback: {} },
+        { key: 'schedules', url: `${env.BACKEND_API_URL}/api/admin/class_schedule`, fallback: [] },
+        { key: 'users', url: `${env.BACKEND_API_URL}/api/admin/users`, fallback: [] },
+        { key: 'labs', url: `${env.BACKEND_API_URL}/api/admin/labs`, fallback: [] },
+        { key: 'tables', url: `${env.BACKEND_API_URL}/api/admin/tables`, fallback: [] },
+        { key: 'bookings', url: `${env.BACKEND_API_URL}/api/admin/bookings`, fallback: [] }
+    ] as const;
+
+    const results = await Promise.all(
+        endpoints.map(async ({ key, url, fallback }) => {
+            try {
+                const response = await fetch(url, { headers: authHeaders });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`Admin load failed for ${key}:`, response.status, errorText);
+                    return { key, data: fallback, error: `${key} (${response.status})` };
+                }
+
+                const payload = await response.json();
+                return { key, data: payload.data ?? fallback, error: null };
+            } catch (error) {
+                console.error(`Admin load error for ${key}:`, error);
+                return { key, data: fallback, error: `${key} (network error)` };
             }
         })
-    ]);
+    );
 
-    const adminStats = statsResponse.ok ? (await statsResponse.json()).data : {};
-    const schedules = schedulesResponse.ok ? (await schedulesResponse.json()).data : [];
-    const users = usersResponse.ok ? (await usersResponse.json()).data : [];
-    const labs = labsResponse.ok ? (await labsResponse.json()).data : [];
-    const tables = tablesResponse.ok ? (await tablesResponse.json()).data : [];
-    const bookings = bookingsResponse.ok ? (await bookingsResponse.json()).data : [];
+    const data = Object.fromEntries(results.map(({ key, data }) => [key, data]));
+    const loadErrors = results.flatMap(({ error }) => (error ? [error] : []));
 
-    return { session, adminStats, schedules, users, labs, tables, bookings }
+    return {
+        session,
+        adminStats: data.adminStats,
+        schedules: data.schedules,
+        users: data.users,
+        labs: data.labs,
+        tables: data.tables,
+        bookings: data.bookings,
+        loadErrors
+    };
 }
 
 export const actions: Actions = {
     changeUserType: async ({ request, locals }) => {
         const session = await locals.auth();
         if (!session?.user) {
-            redirect(303, '/auth');
+            throw redirect(303, '/auth');
         }
         const formData = await request.formData();
         const userId = formData.get('userId');
@@ -97,7 +98,7 @@ export const actions: Actions = {
     addClassSchedule: async ({ request, locals }) => {
         const session = await locals.auth();
         if (!session?.user) {
-            redirect(303, '/auth')
+            throw redirect(303, '/auth')
         }
         const formData = await request.formData();
         const labId = formData.get('labId');
@@ -128,7 +129,7 @@ export const actions: Actions = {
 
     deleteClassSchedule: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const classId = formData.get('classId')
@@ -154,7 +155,7 @@ export const actions: Actions = {
     },
     addTable: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const labId = formData.get('labId')
@@ -182,7 +183,7 @@ export const actions: Actions = {
     },
     deleteTable: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const tableId = formData.get('tableId')
@@ -208,7 +209,7 @@ export const actions: Actions = {
     },
     addLab: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const lab_name = formData.get('lab_name')
@@ -237,7 +238,7 @@ export const actions: Actions = {
 
     deleteLab: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const labId = formData.get('labId')
@@ -263,7 +264,7 @@ export const actions: Actions = {
     },
     deleteBooking: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const bookingId = formData.get('bookingId')
@@ -289,7 +290,7 @@ export const actions: Actions = {
     },
     addBooking: async ({ request, locals }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth')
+        if (!session?.user) throw redirect(303, '/auth')
 
         const formData = await request.formData()
         const userId = formData.get('userId')

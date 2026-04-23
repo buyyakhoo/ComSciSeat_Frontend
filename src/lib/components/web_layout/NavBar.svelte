@@ -1,12 +1,12 @@
 <script lang="ts">
     import { Home, Calendar, Moon, Sun, User, LogOut, ShieldUser, Menu } from "lucide-svelte";
-    import { SignOut } from "@auth/sveltekit/components";
     import { onMount } from "svelte";
     import type { UserStu as UserData } from '$lib/shared/types/usermode';
     
     let { session } = $props<{ session?: { user?: UserData } | null }>();
     let currentTheme: string = $state('light');
     let user = $derived(session?.user);
+    const defaultProfileImage = '/images/default-profile.svg';
     
     onMount(() => {
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -19,6 +19,12 @@
         currentTheme = newTheme;
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
+    }
+
+    function handleProfileImageError(event: Event) {
+        const image = event.currentTarget as HTMLImageElement;
+        if (image.src.endsWith(defaultProfileImage)) return;
+        image.src = defaultProfileImage;
     }
 </script>
 
@@ -61,7 +67,11 @@
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
-                        <img alt="Profile" src={user.image || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"} />
+                        <img
+                            alt="Profile"
+                            src={user.image || defaultProfileImage}
+                            onerror={handleProfileImageError}
+                        />
                     </div>
                 </div>
                 <ul class="mt-3 z-50 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 gap-2">
@@ -76,11 +86,9 @@
                         </button>
                     </li>
                     <li>
-                        <SignOut redirectTo="/auth">
-                            <div slot="submitButton" class="text-error w-full text-left">
-                                <LogOut class="w-4 h-4 inline mr-2" />Sign Out
-                            </div>
-                        </SignOut>
+                        <a href="/signout" class="text-error">
+                            <LogOut class="w-4 h-4" />Sign Out
+                        </a>
                     </li>
                 </ul>
             </div>

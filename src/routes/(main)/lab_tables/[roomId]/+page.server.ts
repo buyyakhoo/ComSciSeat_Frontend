@@ -5,7 +5,7 @@ import { env } from "$env/dynamic/private";
 export const load: PageServerLoad = async ({ locals, fetch, params }) => {
     const session = await locals.auth();
     if (!session?.user) {
-        redirect(303, '/auth');
+        throw redirect(303, '/auth');
     }
 
     const roomId = Number.parseInt(params.roomId || '0');
@@ -80,7 +80,7 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
 export const actions: Actions = {
     checkAvailability: async ({ request, locals, fetch }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth');
+        if (!session?.user) throw redirect(303, '/auth');
 
         const formData = await request.formData();
         const lab_id = formData.get('lab_id');
@@ -114,7 +114,7 @@ export const actions: Actions = {
 
     reserve: async ({ request, locals, fetch }) => {
         const session = await locals.auth();
-        if (!session?.user) redirect(303, '/auth');
+        if (!session?.user) throw redirect(303, '/auth');
 
         const formData = await request.formData();
 
@@ -128,6 +128,7 @@ export const actions: Actions = {
                 table_id: Number(formData.get('table_id')),
                 table_code: formData.get('table_code'),
                 date: formData.get('date'),
+                booking_date: formData.get('date'),
                 slot: formData.get('slot'),
                 lab_id: Number(formData.get('lab_id'))
             })

@@ -5,7 +5,7 @@ import { env } from '$env/dynamic/private';
 export const load: PageServerLoad = async ({ locals, fetch }) => {
     const session = await locals.auth();
     if (!session) {
-        redirect(302, '/auth');
+        throw redirect(302, '/auth');
     }
 
     const user = session.user;

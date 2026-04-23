@@ -5,7 +5,7 @@ import { env } from "$env/dynamic/private";
 export const load: PageServerLoad = async ({ locals, fetch }) => {
     const session = await locals.auth();
     if (!session?.user) {
-        redirect(303, '/auth');
+        throw redirect(303, '/auth');
     }
     const backendToken = session.backendToken;
     try {
@@ -54,10 +54,10 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 }
 
 export const actions: Actions = {
-    cancel: async ({ request, locals }) => {
+    cancel: async ({ request, locals, fetch }) => {
         const session = await locals.auth();
         if (!session?.user) {
-            redirect(303, '/auth');
+            throw redirect(303, '/auth');
         }
 
         const formData = await request.formData();

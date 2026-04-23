@@ -14,6 +14,7 @@
     let isReserved: boolean = $state(false);
     let labId: number = $state(0);
     let isLoading: boolean = $state(false);
+    let actionError: string = $state('');
 
     export const showModal = (
             tableIdValue: number, 
@@ -29,6 +30,7 @@
         slot = slotValue;
         isReserved = isReservedValue;
         labId = labIdValue;
+        actionError = '';
         dialogElement.showModal();
     }    
 </script>
@@ -75,6 +77,13 @@
                     isLoading = true;
                     return async ({ result, update }: { result: any, update: (opts?: any) => Promise<void> }) => {
                         await update({ invalidateAll: false });
+                        if (result.type !== 'success' || result.data?.success === false) {
+                            actionError = result.data?.error ?? 'Reservation failed. Please try again.';
+                            isLoading = false;
+                            return;
+                        }
+
+                        actionError = '';
                         dialogElement.close();
                         onReservationSuccess?.(result.data);
                         isLoading = false;

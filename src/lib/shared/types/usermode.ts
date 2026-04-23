@@ -9,6 +9,7 @@ export interface UserStu {
 export interface Session {
     user?: UserStu;
     expires?: string;
+    backendToken?: string;
 }
 
 export interface LabRoom {

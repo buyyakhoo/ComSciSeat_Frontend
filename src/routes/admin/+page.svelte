@@ -16,6 +16,7 @@
     let tables = $derived(data.tables ?? [])
     let bookings = $derived(data.bookings ?? [])
     let schedules = $derived(data.schedules ?? [])
+    let loadErrors: string[] = $derived(data.loadErrors ?? [])
 
     let stats = $derived([
         { label: 'การจองทั้งหมด', value: adminStats.allBookings ?? 0, sub: 'โต๊ะ', color: 'text-success' },
@@ -42,6 +43,11 @@
     <div class="drawer-content flex flex-col min-h-screen">
         <NavBarAdmin {activeTab} />
         <div class="p-4 lg:p-8 flex-1 bg-base-200">
+            {#if loadErrors.length > 0}
+                <div class="alert alert-warning mb-6">
+                    <span>Admin data failed to load: {loadErrors.join(', ')}</span>
+                </div>
+            {/if}
             {#if activeTab === 'dashboard'}
                 <div class="mb-6">
                     <h1 class="text-2xl font-bold">ภาพรวมระบบ</h1>

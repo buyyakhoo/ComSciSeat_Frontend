@@ -1,12 +1,15 @@
-// src/app.d.ts
-import type { DefaultSession } from "@auth/sveltekit";
+import type { Session } from '$lib/shared/types/usermode';
 
-declare module "@auth/sveltekit" {
-    interface Session {
-        backendToken?: string;
-        user: {
-            student_id?: string;
-            role?: string;
-        } & DefaultSession["user"];
+declare global {
+    namespace App {
+        interface Locals {
+            auth: () => Promise<Session | null>;
+        }
+
+        interface PageData {
+            session?: Session | null;
+        }
     }
 }
+
+export {};
