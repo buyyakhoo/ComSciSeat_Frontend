@@ -18,12 +18,12 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     };
 
     const endpoints = [
-        { key: 'adminStats', url: `${env.BACKEND_API_URL}/api/admin/booking-stats-admin`, fallback: {} },
-        { key: 'schedules', url: `${env.BACKEND_API_URL}/api/admin/class_schedule`, fallback: [] },
-        { key: 'users', url: `${env.BACKEND_API_URL}/api/admin/users`, fallback: [] },
-        { key: 'labs', url: `${env.BACKEND_API_URL}/api/admin/labs`, fallback: [] },
-        { key: 'tables', url: `${env.BACKEND_API_URL}/api/admin/tables`, fallback: [] },
-        { key: 'bookings', url: `${env.BACKEND_API_URL}/api/admin/bookings`, fallback: [] }
+        { key: 'adminStats', url: `${env.BACKEND_API_URL}/api/reservations/stats`, fallback: {} },
+        { key: 'schedules', url: `${env.BACKEND_API_URL}/api/labs/class-schedules`, fallback: [] },
+        { key: 'users', url: `${env.BACKEND_API_URL}/api/user`, fallback: [] },
+        { key: 'labs', url: `${env.BACKEND_API_URL}/api/labs`, fallback: [] },
+        { key: 'tables', url: `${env.BACKEND_API_URL}/api/tables`, fallback: [] },
+        { key: 'bookings', url: `${env.BACKEND_API_URL}/api/reservations`, fallback: [] }
     ] as const;
 
     const results = await Promise.all(
@@ -70,7 +70,7 @@ export const actions: Actions = {
         const userId = formData.get('userId');
         const userType = formData.get('userType');
 
-        const changeUserTypeResponse = await fetch(`${env.BACKEND_API_URL}/api/admin/users/${userId}`, {
+        const changeUserTypeResponse = await fetch(`${env.BACKEND_API_URL}/api/user/${userId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const actions: Actions = {
         const slot = formData.get('slot');
         const subject = formData.get('subject');
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/add_class_schedule`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/labs/class-schedules`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const classId = formData.get('classId')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/class_schedule/${classId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/labs/class-schedules/${classId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ export const actions: Actions = {
         const labId = formData.get('labId')
         const table_code = formData.get('table_code')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/add_table`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/tables`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const tableId = formData.get('tableId')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/tables/${tableId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/tables/${tableId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ export const actions: Actions = {
         const lab_name = formData.get('lab_name')
         const lab_code = formData.get('lab_code')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/add_lab`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/labs`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -243,7 +243,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const labId = formData.get('labId')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/labs/${labId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/labs/${labId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -269,7 +269,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const bookingId = formData.get('bookingId')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/bookings/${bookingId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/reservations/${bookingId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -298,7 +298,7 @@ export const actions: Actions = {
         const booking_date = formData.get('booking_date')
         const slot = formData.get('slot')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/admin/bookings`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/reservations`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
