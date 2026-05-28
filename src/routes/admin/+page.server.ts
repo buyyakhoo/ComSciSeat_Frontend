@@ -18,12 +18,12 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     };
 
     const endpoints = [
-        { key: 'adminStats', url: `${env.BACKEND_API_URL}/api/reservations/stats`, fallback: {} },
-        { key: 'schedules', url: `${env.BACKEND_API_URL}/api/labs/class-schedules`, fallback: [] },
+        { key: 'adminStats', url: `${env.BACKEND_API_URL}/api/bookings/stats`, fallback: {} },
+        { key: 'schedules', url: `${env.BACKEND_API_URL}/api/class_schedule`, fallback: [] },
         { key: 'users', url: `${env.BACKEND_API_URL}/api/user`, fallback: [] },
         { key: 'labs', url: `${env.BACKEND_API_URL}/api/labs`, fallback: [] },
         { key: 'tables', url: `${env.BACKEND_API_URL}/api/tables`, fallback: [] },
-        { key: 'bookings', url: `${env.BACKEND_API_URL}/api/reservations`, fallback: [] }
+        { key: 'bookings', url: `${env.BACKEND_API_URL}/api/bookings`, fallback: [] }
     ] as const;
 
     const results = await Promise.all(
@@ -106,7 +106,7 @@ export const actions: Actions = {
         const slot = formData.get('slot');
         const subject = formData.get('subject');
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/labs/class-schedules`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/class_schedule`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const classId = formData.get('classId')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/labs/class-schedules/${classId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/class_schedule/${classId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -269,7 +269,7 @@ export const actions: Actions = {
         const formData = await request.formData()
         const bookingId = formData.get('bookingId')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/reservations/${bookingId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/bookings/${bookingId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -298,7 +298,7 @@ export const actions: Actions = {
         const booking_date = formData.get('booking_date')
         const slot = formData.get('slot')
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/reservations`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/bookings`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

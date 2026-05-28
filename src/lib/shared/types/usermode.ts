@@ -39,7 +39,7 @@ export interface LabData {
 }
 
 export interface LabHandleSelected {
-    tables: TableReservation[];
+    tables: TableBooking[];
     status: string;
     statusDescribe: string;
     isReserved: boolean;
@@ -47,7 +47,7 @@ export interface LabHandleSelected {
     selectedTime: string;
 }
 
-export interface TableReservation {
+export interface TableBooking {
     table_id: number;
     table_code: string;
     is_available: boolean;
@@ -75,6 +75,27 @@ export interface ScheduleData {
     classPeriods: ClassPeriod[];
 }
 
+export interface TimeSlot {
+    id: string;
+    startTime: string;
+    endTime: string;
+    displayTime: string;
+}
+
+export interface Table {
+    id: number;
+    capacity: number;
+    minCapacity: number;
+    status: 'available' | 'reserved' | 'occupied';
+}
+
+export interface TableStatus {
+    tableId: number;
+    timeSlot: string;
+    status: 'available' | 'reserved' | 'occupied';
+    userName?: string;
+    partySize?: number;
+}
 export interface AuthCallbacks {
     signIn: (params: { user: UserStu; account?: any; profile?: any }) => Promise<boolean>;
     session: (params: { session: Record<string, any>; token: any }) => Promise<Session>;

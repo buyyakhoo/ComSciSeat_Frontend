@@ -4,7 +4,7 @@
     import { mapSlotToDurationTime } from '$lib/shared/utils';
     import LoadingIcon from '../decorate/LoadingIcon.svelte';
 
-    let { onReservationSuccess } = $props();
+    let { onBookingSuccess } = $props();
     let dialogElement: HTMLDialogElement;
 
     let tableId: number = $state(0);
@@ -78,14 +78,14 @@
                     return async ({ result, update }: { result: any, update: (opts?: any) => Promise<void> }) => {
                         await update({ invalidateAll: false });
                         if (result.type !== 'success' || result.data?.success === false) {
-                            actionError = result.data?.error ?? 'Reservation failed. Please try again.';
+                            actionError = result.data?.error ?? 'Booking failed. Please try again.';
                             isLoading = false;
                             return;
                         }
 
                         actionError = '';
                         dialogElement.close();
-                        onReservationSuccess?.(result.data);
+                        onBookingSuccess?.(result.data);
                         isLoading = false;
                     };
                 }}

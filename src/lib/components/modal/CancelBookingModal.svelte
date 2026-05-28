@@ -1,7 +1,7 @@
 <script lang="ts">
   import ModalBox from './ModalBox.svelte';
 
-    let { onReservationCancelSuccess } = $props();
+    let { onBookingCancelSuccess } = $props();
     let dialogElement: HTMLDialogElement;
     let bookingId: number = $state(0);
     let tableId: number = $state(0);
@@ -25,8 +25,8 @@
     }
     
     const handleConfirm = () => {
-        if (onReservationCancelSuccess) {
-            onReservationCancelSuccess(bookingId);
+        if (onBookingCancelSuccess) {
+            onBookingCancelSuccess(bookingId);
         }
         dialogElement.close();
     }

@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     }
     const backendToken = session.backendToken;
     try {
-        const response = await fetch(`${env.BACKEND_API_URL}/api/reservations/my-bookings`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/bookings/my-bookings`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,21 +21,21 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
             return {
                 session,
                 reservedTables: [],
-                error: `Failed to load reservations: ${response.status}`
+                error: `Failed to load Bookings: ${response.status}`
             }
         }
 
         const responseData = await response.json();
-        const reservations = responseData.data;
+        const Bookings = responseData.data;
 
-        const reservedTables = reservations.map((reservation: any) => ({
-            booking_id: reservation.booking_id,
-            table_id: reservation.table_id,
-            table_code: reservation.tables.table_code,
-            lab_id: reservation.tables.lab_id,
-            lab_name: reservation.tables.labs.lab_name,
-            date: reservation.booking_date.slice(0, 10),
-            slot: reservation.slot
+        const reservedTables = Bookings.map((Booking: any) => ({
+            booking_id: Booking.booking_id,
+            table_id: Booking.table_id,
+            table_code: Booking.tables.table_code,
+            lab_id: Booking.tables.lab_id,
+            lab_name: Booking.tables.labs.lab_name,
+            date: Booking.booking_date.slice(0, 10),
+            slot: Booking.slot
         }))
 
         return {
@@ -48,7 +48,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
         return {
             session,
             reservedTables: [],
-            error: 'An error occurred while loading reservations.'
+            error: 'An error occurred while loading Bookings.'
         }
     }
 }
@@ -63,7 +63,7 @@ export const actions: Actions = {
         const formData = await request.formData();
         const bookingId = formData.get('bookingId');
 
-        const response = await fetch(`${env.BACKEND_API_URL}/api/reservations/cancel/${bookingId}`, {
+        const response = await fetch(`${env.BACKEND_API_URL}/api/bookings/cancel/${bookingId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

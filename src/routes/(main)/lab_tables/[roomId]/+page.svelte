@@ -2,7 +2,7 @@
     import Legend from '$lib/components/lab/Legend.svelte';
     import type { LabData, LabHandleSelected } from '$lib/shared/types/usermode.js';
     import RoomButton from '$lib/components/card/RoomButton.svelte';
-    import ReservationModal from '$lib/components/modal/ReservationModal.svelte';
+    import BookingModal from '$lib/components/modal/BookingModal.svelte';
     import LabRoomCard from '$lib/components/card/LabRoomCard.svelte';
     import ClassScheduleModal from '$lib/components/modal/ClassScheduleModal.svelte';
     import TimeDaySelect from '$lib/components/form_select/TimeDaySelect.svelte';
@@ -29,7 +29,7 @@
 
     let isLoading: boolean = $state(false);
     let isClicked: boolean = $state(false);
-    let reservationModal: ReturnType<typeof ReservationModal>;
+    let bookingModal: ReturnType<typeof BookingModal>;
     let classScheduleModal: ReturnType<typeof ClassScheduleModal>;
 
     const getTodayDate = () => {
@@ -143,7 +143,7 @@
                             notAllowedDisplay="จองแล้ว"  
                             onButton={() => {
                                 if (table.is_available) {
-                                    reservationModal.showModal(
+                                    bookingModal.showModal(
                                         table.table_id, 
                                         table.table_code,
                                         labHandleSelected.selectedDate, 
@@ -161,9 +161,9 @@
     </div>
 </div>
 
-<ReservationModal 
-    bind:this={reservationModal}
-    onReservationSuccess={(resultData: any) => {
+<BookingModal 
+    bind:this={bookingModal}
+    onBookingSuccess={(resultData: any) => {
         if (resultData?.tables) {
             labHandleSelected.tables = resultData.tables;
             labHandleSelected.isReserved = resultData.isReserved;

@@ -1,5 +1,5 @@
 # ComSciSeat Frontend
-Frontend computer laboratory table reservation web application for Computer Science students
+Frontend computer laboratory table Booking web application for Computer Science students
 
 ## Related Repository
 - Backend: https://github.com/buyyakhoo/QuickSciSeat_Backend
@@ -24,16 +24,16 @@ Frontend computer laboratory table reservation web application for Computer Scie
 ![Laboratory Page 2](/readme_picture/Screenshot%20(303).png)
 - After select time
 ![Laboratory Page 3](/readme_picture/Screenshot%20(304).png)
-- Popup confirm reservation
+- Popup confirm Booking
 ![Laboratory Page 4](/readme_picture/Screenshot%20(305).png)
 - After reserved
 ![Laboratory Page 5](/readme_picture/Screenshot%20(306).png)
 
-### Reservation Page
-- View Reservation List
-![Reservation Page 1](/readme_picture/Screenshot%20(307).png)
-- Popup confirm cancel reservation
-![Reservation Page 2](/readme_picture/Screenshot%20(308).png)
+### Booking Page
+- View Booking List
+![Booking Page 1](/readme_picture/Screenshot%20(307).png)
+- Popup confirm cancel Booking
+![Booking Page 2](/readme_picture/Screenshot%20(308).png)
 
 ### Profile Page
 ![Profile Page](/readme_picture/Screenshot%20(309).png)

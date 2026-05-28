@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
     const backendToken = session.backendToken;
 
     const [bookingRes, classScheduleRes, labsRes] = await Promise.all([
-        fetch(`${env.BACKEND_API_URL}/api/reservations/my-bookings`, {
+        fetch(`${env.BACKEND_API_URL}/api/bookings/my-bookings`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
             }
         }),
 
-        fetch(`${env.BACKEND_API_URL}/api/labs/${roomId}/class_schedule`, {
+        fetch(`${env.BACKEND_API_URL}/api/class_schedule/lab/${roomId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,14 +41,14 @@ export const load: PageServerLoad = async ({ locals, fetch, params }) => {
     if (bookingRes.ok) {
         const bookingsData = await bookingRes.json();
         if (bookingsData.success) {
-            bookings = bookingsData.data.map((reservation: any) => ({
-                booking_id: reservation.booking_id,
-                table_id: reservation.table_id,
-                table_code: reservation.tables.table_code,
-                lab_id: reservation.tables.lab_id,
-                lab_name: reservation.tables.labs.lab_name,
-                date: reservation.booking_date.slice(0, 10),
-                slot: reservation.slot
+            bookings = bookingsData.data.map((Booking: any) => ({
+                booking_id: Booking.booking_id,
+                table_id: Booking.table_id,
+                table_code: Booking.tables.table_code,
+                lab_id: Booking.tables.lab_id,
+                lab_name: Booking.tables.labs.lab_name,
+                date: Booking.booking_date.slice(0, 10),
+                slot: Booking.slot
             }))
         }
     }
@@ -88,7 +88,7 @@ export const actions: Actions = {
         const slot = formData.get('slot');
 
         const response = await fetch(
-            `${env.BACKEND_API_URL}/api/reservations/check-table-availability?lab_id=${lab_id}&date=${date}&slot=${slot}`,
+            `${env.BACKEND_API_URL}/api/bookings/check-table-availability?lab_id=${lab_id}&date=${date}&slot=${slot}`,
             { 
                 headers: { 
                         'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export const actions: Actions = {
 
         const formData = await request.formData();
 
-        const bookRes = await fetch(`${env.BACKEND_API_URL}/api/reservations/book`, {
+        const bookRes = await fetch(`${env.BACKEND_API_URL}/api/bookings/book`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ export const actions: Actions = {
         }
 
         const response = await fetch(
-            `${env.BACKEND_API_URL}/api/reservations/check-table-availability?lab_id=${formData.get('lab_id')}&date=${formData.get('date')}&slot=${formData.get('slot')}`,
+            `${env.BACKEND_API_URL}/api/bookings/check-table-availability?lab_id=${formData.get('lab_id')}&date=${formData.get('date')}&slot=${formData.get('slot')}`,
             { 
                 headers: { 
                     'Content-Type': 'application/json',

@@ -5,7 +5,7 @@
     import { browser } from '$app/environment';
     import type { PageData } from './$types';
     import Table from '$lib/components/table/Table.svelte';
-    import CancelReservationModal from '$lib/components/modal/CancelReservationModal.svelte';
+    import CancelBookingModal from '$lib/components/modal/CancelBookingModal.svelte';
     import type { ReservedTable } from '$lib/shared/types/usermode';
     import { enhance } from '$app/forms';
     import { mapSlotToDurationTime } from '$lib/shared/utils';
@@ -16,7 +16,7 @@
 
     let reservedTables: ReservedTable[] = $derived(data.reservedTables)
     let error: string = $derived(data.error)
-    let cancelReservationModal: ReturnType<typeof CancelReservationModal>;
+    let cancelBookingModal: ReturnType<typeof CancelBookingModal>;
     let isLoading: boolean = $state(true)
 
     const isPast = (dateStr: string, slot: string) => {
@@ -94,7 +94,7 @@
                                 <button
                                     type="button"
                                     class="btn btn-sm btn-error"
-                                    onclick={() => cancelReservationModal.showModal(
+                                    onclick={() => cancelBookingModal.showModal(
                                         reserved.booking_id,
                                         reserved.table_id,
                                         reserved.table_code,
@@ -115,9 +115,9 @@
     </div>
 </div>
 
-<CancelReservationModal 
-    bind:this={cancelReservationModal} 
-    onReservationCancelSuccess={(bookingId: number) =>{
+<CancelBookingModal 
+    bind:this={cancelBookingModal} 
+    onBookingCancelSuccess={(bookingId: number) =>{
         (document.getElementById(`cancel-form-${bookingId}`) as HTMLFormElement)?.requestSubmit();
     }}
 />

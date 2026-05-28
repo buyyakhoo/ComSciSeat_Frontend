@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
         console.error('Failed to fetch labs:', roomResponse.status, roomResponse.statusText);
     }
 
-    const bookingStatsResponse = await fetch(`${env.BACKEND_API_URL}/api/reservations/booking-stats`, {
+    const bookingStatsResponse = await fetch(`${env.BACKEND_API_URL}/api/bookings/booking-stats`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
