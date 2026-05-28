@@ -25,7 +25,8 @@ The application should help students plan lab usage during free periods and prev
 - Icons: `lucide-svelte`.
 - Runtime/build tool: Vite.
 - Backend communication: REST API calls using `fetch`.
-- Auth/session: HTTP-only auth token cookie decoded in `src/auth.ts`, then enriched from the backend.
+- Auth/session: HTTP-only auth token cookie (`auth_token`) decoded in `src/auth.ts`, then enriched from the backend via `GET /api/user/:identifier` using the JWT's UUID (`sub` claim).
+- A `session_user` cookie caches name, email, student_id, role, and image from the OAuth callback as a fallback when the API call fails.
 - Backend base URL: `BACKEND_API_URL` from private environment variables.
 
 ## Architectural Overview
@@ -47,7 +48,7 @@ Frontend structure:
 - `src/lib/components` contains reusable UI components grouped by feature.
 - `src/lib/shared/types` contains shared frontend TypeScript types.
 - `src/lib/data` contains static frontend data such as time slots.
-- `src/auth.ts` owns local session cookie handling and backend user lookup.
+- `src/auth.ts` owns local session cookie handling and backend user lookup. Fetches the user record by UUID (from JWT) via `GET /api/user/:identifier`. Falls back to a `session_user` cookie if the API call fails.
 - `src/hooks.server.ts` installs the auth handle.
 
 ## Tech Stack
@@ -112,7 +113,7 @@ There is no dedicated unit-test script in `package.json` at the time of writing.
 - `/frontend`: SvelteKit frontend, UI, routing, client/server page logic, frontend auth integration, frontend types, and static assets.
 - `/backend`: API service, database schema/migrations, Prisma models, booking validation, email sending, Google token verification, and backend authorization rules.
 
-Do not edit `/backend` from a frontend task unless the user explicitly asks for cross-stack changes. If a frontend change requires a backend contract change, document the expected API change and ask before editing backend files.
+Do not edit `/backend` from a frontend task unless the user explicitly asks for cross-stack changes. If a frontend change requires a backend contract change, document the expected API change and ask before editing backend files. Previously authorized cross-stack changes include: `GET /api/user/:identifier` now accepts UUID or student_id (route `:student_id` → `:identifier`).
 
 ## Safety Constraints
 
@@ -131,7 +132,7 @@ Do not edit `/backend` from a frontend task unless the user explicitly asks for 
 The frontend expects the backend to expose REST endpoints similar to:
 
 - `/api/user`
-- `/api/user/:id`
+- `/api/user/:identifier` (accepts UUID or 8-digit student_id)
 - `/api/labs`
 - `/api/tables`
 - `/api/bookings`

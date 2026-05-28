@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit'
 import { env } from '$env/dynamic/private'
-import { setAuthCookie, setProfileImageCookie } from '../../../auth'
+import { setAuthCookie, setProfileImageCookie, setSessionUserCookie } from '../../../auth'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
@@ -39,6 +39,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
         }
 
         setAuthCookie({ cookies }, data.token)
+        setSessionUserCookie({ cookies }, data.user)
         const profileImage = data.user?.picture ?? data.user?.image
         if (profileImage) {
             setProfileImageCookie({ cookies }, profileImage)

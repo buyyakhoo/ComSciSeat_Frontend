@@ -1,8 +1,10 @@
 <script lang="ts">
     import { Mail, User, LogOut, GraduationCap } from 'lucide-svelte';
     import type { UserStu } from '$lib/shared/types/usermode';
+    import { formatStudentId } from '$lib/shared/utils';
 
     export let user: UserStu | undefined;
+    $: displayStudentId = formatStudentId(user?.student_id);
     const fallbackImage = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face';
 </script>
 
@@ -24,10 +26,10 @@
                             <Mail class="w-3 h-3 mr-1" />
                             <span class="truncate max-w-[200px] sm:max-w-none">{user?.email}</span>
                         </div>
-                        {#if user?.student_id}
+                        {#if displayStudentId}
                         <div class="badge bg-primary text-primary-content py-3 px-3 sm:py-2 sm:px-2">
                             <GraduationCap class="w-3 h-3 mr-1" />
-                            Student ID: {user.student_id}
+                            Student ID: {displayStudentId}
                         </div>
                         {/if}
                         <div class="badge bg-primary text-primary-content py-3 px-3 sm:py-2 sm:px-2">

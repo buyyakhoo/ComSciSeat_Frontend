@@ -14,3 +14,12 @@ export const mapSlotToDurationTime = (slot: string) => {
 export const DAY_NAMES: Record<number, string> = {
     0: 'อาทิตย์', 1: 'จันทร์', 2: 'อังคาร', 3: 'พุธ', 4: 'พฤหัสบดี', 5: 'ศุกร์', 6: 'เสาร์'
 }
+
+export const formatStudentId = (studentId?: string | number | null) => {
+    if (studentId === undefined || studentId === null) return null
+
+    const digits = String(studentId).replace(/\D/g, '')
+    if (!digits) return null
+
+    return digits.slice(0, 8)
+}
